@@ -9,7 +9,7 @@
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.example.plain-text</string>
+				<string>ca.esri.gisdesign</string>
 			</array>
 			<key>UIDocumentClass</key>
 			<string>$(PRODUCT_MODULE_NAME).Document</string>
@@ -37,17 +37,17 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.plain-text</string>
+				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Example Text</string>
+			<string>GIS Simulator Design</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.example.plain-text</string>
+			<string>ca.esri.gisdesign</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>exampletext</string>
+					<string>gisdesign</string>
 				</array>
 			</dict>
 		</dict>
