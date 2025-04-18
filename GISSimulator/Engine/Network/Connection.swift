@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Connection: Described, ServiceTimeCalculator, QueueProvider {
+public struct Connection: Described, ServiceTimeCalculator, QueueProvider, Equatable {
 	public var name: String {
 		get {
 			"\(source.name) to \(destination.name)"

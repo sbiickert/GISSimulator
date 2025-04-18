@@ -37,7 +37,7 @@ public class MultiQueue {
 	}
 	
 	private func channelsWithFinishedRequests(clock: Int) -> [Int] {
-		return channels.enumerated().filter {($0.1?.waitEnd ?? 0) < clock}.map(\.0)
+		return channels.enumerated().filter {($0.1?.waitEnd ?? Int.max) <= clock}.map(\.0)
 	}
 	
 	public var requestCount: Int {
@@ -61,12 +61,13 @@ public class MultiQueue {
 							  clock: clock,
 							  requestName: wr.request.name,
 							  serviceTime: wr.serviceTime ?? 0,
-							  queueTime: clock - wr.waitStart - (wr.serviceTime ?? 0) - (wr.latency ?? 0),
+							  queueTime: wr.queueTime,
 							  latencyTime: wr.latency ?? 0)
 			))
 			
 			// Move a waiting request into the empty channel
 			self.channels[index] = mainQueue.isEmpty ? nil : self.mainQueue.removeFirst()
+			self.channels[index]?.queueEnded(at: clock, waitMode: waitMode)
 		}
 		
 		return finishedRequests

@@ -7,7 +7,11 @@
 
 import Foundation
 
-public struct Route {
+public struct Route: CustomStringConvertible {
+	public var description: String {
+		return connections.map(\.name).joined(separator: ", ")
+	}
+	
 	public var connections: [Connection]
 
 	public static func zoneIsSource(_ zone: Zone, in network: [Connection]) -> Bool {
@@ -57,6 +61,6 @@ public struct Route {
 		let shortestPath = resultsEndingAtDestination
 			.sorted(by: {$0.count < $1.count})
 		
-		return resultsEndingAtDestination.first ?? [] // i.e. the shortest or an empty result
+		return shortestPath.first ?? [] // i.e. the shortest or an empty result
 	}
 }
