@@ -28,7 +28,7 @@ struct ServiceTest {
 		"network", "scene", "sync", "stream",
 		"ranalytics", "un", "custom", "vdi",
 		"web", "portal", "dbms", "relational",
-		"object", "stbds", "file"]
+		"object", "stbds", "file", "mobile"]
 	
 	static func sampleService(for type: String) -> Service {
 		switch type {
@@ -36,6 +36,8 @@ struct ServiceTest {
 			return Service(name: "Pro", description: "Sample Pro", serviceType: type, balancingModel: .Single)
 		case "browser":
 			return Service(name: "Browser", description: "Sample Browser", serviceType: type, balancingModel: .Single)
+		case "mobile":
+			return Service(name: "Mobile", description: "Sample App", serviceType: type, balancingModel: .Single)
 		case "map":
 			return Service(name: "Map", description: "Sample Map", serviceType: type, balancingModel: .RoundRobin)
 		case "feature":

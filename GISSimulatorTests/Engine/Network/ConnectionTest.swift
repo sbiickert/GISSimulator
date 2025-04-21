@@ -66,5 +66,11 @@ struct ConnectionTest {
 		destination: ZoneTest.sampleEdgeZone,
 		bandwidthMbps: 1000,
 		latencyMs: 1)
+	
+	static let sampleConnectionToAGOL: Connection = Connection(
+		source: ZoneTest.sampleInternetZone,
+		destination: ZoneTest.sampleAGOLZone,
+		bandwidthMbps: 1000,
+		latencyMs: 10)
 
 }

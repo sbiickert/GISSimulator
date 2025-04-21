@@ -16,7 +16,7 @@ public struct Design: Described, Validatable {
 	public var serviceProviders: [ServiceProvider] = []
 	public var workflows: [Workflow] = []
 	
-	private var _computeNodes: [ComputeNode] = []
+	var _computeNodes: [ComputeNode] = []
 	
 	/**
 	 Returns all clients, physical servers and virtual servers on physical hosts
@@ -77,7 +77,29 @@ public struct Design: Described, Validatable {
 		
 		return messages
 	}
-	
+
+	private mutating func updateServiceProvidersWithNewComputeNodes() {
+		serviceProviders = serviceProviders.map({ sp in
+			let updatedNodes = sp.nodes.compactMap({ n in
+				computeNodes.first(where: { $0.name == n.name })
+			})
+			var copy = sp
+			copy.nodes = updatedNodes
+			return copy
+		})
+	}
+
+	private mutating func updateWorkflowsWithNewServiceProviders() {
+		workflows = workflows.map({ w in
+			let uSPs = w.defaultServiceProviders.compactMap({ sp in
+				serviceProviders.first(where: { $0.name == sp.name })
+			})
+			var copy = w
+			copy.defaultServiceProviders = Set(uSPs)
+			return copy
+		})
+	}
+
 	//
 	// MARK: - Zone Management
 	//
@@ -160,16 +182,20 @@ public struct Design: Described, Validatable {
 	  */
 	public mutating func remove(computeNode node: ComputeNode) {
 		guard node.type == .Client || node.type == .PhysicalServer else {
-			fatalError("Cannot add virtual server to Design directly. Add it to a physical server.")
+			fatalError("Cannot remove virtual server from Design directly. Add it to a physical server.")
 		}
 		computeNodes = computeNodes.filter({$0 != node})
 		updateServiceProvidersWithNewComputeNodes()
 		updateWorkflowsWithNewServiceProviders()
 	}
 	
+	public func getComputeNode(named name: String) -> ComputeNode? {
+		return computeNodes.first(where: { $0.name == name })
+	}
+	
 
 	//
-	// Service Management
+	// MARK: - Service Management
 	//
 	
 	public mutating func add(service: Service) {
@@ -184,7 +210,7 @@ public struct Design: Described, Validatable {
 	
 	
 	//
-	// Service Provider Management
+	// MARK: - Service Provider Management
 	//
 	
 	public mutating func add(serviceProvider: ServiceProvider) {
@@ -199,7 +225,7 @@ public struct Design: Described, Validatable {
 	
 	
 	//
-	// Workflow Management
+	// MARK: - Workflow Management
 	//
 	
 	public mutating func add(workflow: Workflow) {
@@ -213,7 +239,7 @@ public struct Design: Described, Validatable {
 	
 	
 	//
-	// Queues
+	// MARK: - Queues
 	//
 	public func provideQueues() -> [MultiQueue] {
 		let queues: [MultiQueue] =
@@ -222,7 +248,7 @@ public struct Design: Described, Validatable {
 	}
 	
 	//
-	// Static Methods
+	// MARK: - Static Methods
 	//
 
 	static var _nextID: Int = 0
@@ -233,49 +259,5 @@ public struct Design: Described, Validatable {
 	
 	static var nextName: String {
 		return "Design_\(nextID)"
-	}
-
-//	static func update(serviceProviders: [ServiceProvider], with newNodes: [ComputeNode]) -> [ServiceProvider] {
-//		serviceProviders.map({ sp in
-//			let updatedNodes = sp.nodes.compactMap({ n in
-//				newNodes.first(where: { $0.name == n.name })
-//			})
-//			var copy = sp
-//			copy.nodes = updatedNodes
-//			return copy
-//		})
-//	}
-
-	private mutating func updateServiceProvidersWithNewComputeNodes() {
-		serviceProviders = serviceProviders.map({ sp in
-			let updatedNodes = sp.nodes.compactMap({ n in
-				computeNodes.first(where: { $0.name == n.name })
-			})
-			var copy = sp
-			copy.nodes = updatedNodes
-			return copy
-		})
-	}
-
-//	static func update(workflows: [Workflow], with newServiceProviders: [ServiceProvider]) -> [Workflow] {
-//		workflows.map({ w in
-//			let uSPs = w.defaultServiceProviders.compactMap({ sp in
-//				newServiceProviders.first(where: { $0.name == sp.name })
-//			})
-//			var copy = w
-//			copy.defaultServiceProviders = Set(uSPs)
-//			return copy
-//		})
-//	}
-
-	private mutating func updateWorkflowsWithNewServiceProviders() {
-		workflows = workflows.map({ w in
-			let uSPs = w.defaultServiceProviders.compactMap({ sp in
-				serviceProviders.first(where: { $0.name == sp.name })
-			})
-			var copy = w
-			copy.defaultServiceProviders = Set(uSPs)
-			return copy
-		})
 	}
 }

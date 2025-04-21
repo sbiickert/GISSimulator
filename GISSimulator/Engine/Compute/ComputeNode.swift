@@ -58,11 +58,12 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 						  channelCount: c)
 	}
 	
-	public mutating func addVirtualHost(vCores: Int, memoryGB: Int) {
+	public mutating func addVirtualHost(name n: String? = nil, vCores: Int, memoryGB: Int) {
 		guard type == .PhysicalServer else {
 			fatalError("Can only add virtual hosts to physical servers")
 		}
-		let vHost = ComputeNode(name: "VH \(name):\(virtualHosts.count)",
+		let vHostName = n == nil ? "VH \(name):\(virtualHosts.count)" : n!
+		let vHost = ComputeNode(name: vHostName,
 								description: "",
 								hardwareDefinition: hardwareDefinition,
 								zone: zone,

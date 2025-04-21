@@ -42,15 +42,13 @@ public struct Workflow: Described, Validatable, Equatable {
 		return Array(allRequiredServiceTypes.subtracting(allConfigured)).sorted()
 	}
 	
-	public var applyDefaultServiceProviders: Workflow {
+	public mutating func applyDefaultServiceProviders() {
 		let updatedChains = definition.chains.map({
 			var chainCopy = $0
 			chainCopy.serviceProviders = defaultServiceProviders
 			return chainCopy
 		})
-		var copy = self
-		copy.definition.chains = updatedChains
-		return copy
+		definition.chains = updatedChains
 	}
 	
 	public mutating func updateServiceProviders(at index: Int, serviceProviders: Set<ServiceProvider>) {
@@ -59,7 +57,7 @@ public struct Workflow: Described, Validatable, Equatable {
 	
 	public func createClientRequests(network: [Connection], clock: Int) -> (ClientRequestGroup, [ClientRequest]) {
 		let group = ClientRequestGroup(requestClock: clock, workflow: self)
-		var requests = definition.chains.map( {
+		let requests = definition.chains.map( {
 			let solution = ClientRequestSolution.createSolution(for: $0, in: network)
 			return ClientRequest(name: ClientRequest.nextName, description: "", requestClock: clock, solution: solution, groupID: group.id)
 		})

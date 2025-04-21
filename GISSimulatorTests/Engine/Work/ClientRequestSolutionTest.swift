@@ -29,7 +29,7 @@ struct ClientRequestSolutionTest {
     }
 
 	static var sampleIntranetCRS: ClientRequestSolution = {
-		var chain = WorkflowDefTest.sampleWebDynamicMapChain
+		var chain = WorkflowDefTest.sampleDynamicMapChain(client: WorkflowDefStepTest.sampleBrowserWorkflowDefStep)
 		chain.serviceProviders = ServiceProviderTest.sampleWebGISServiceProviders
 		return ClientRequestSolution.createSolution(for: chain,
 													in: RouteTest.sampleIntranet)

@@ -30,7 +30,15 @@ struct ComputeNodeTest {
 						   zone: ZoneTest.sampleIntranetZone,
 						   type: .Client)
 	}
-	
+
+	static var sampleMobile: ComputeNode {
+		return ComputeNode(name: "Mobile 001",
+						   description: "Sample Phone",
+						   hardwareDefinition: HardwareDefTest.sampleMobileHWDef,
+						   zone: ZoneTest.sampleInternetZone,
+						   type: .Client)
+	}
+
 	static var sampleVHost: ComputeNode {
 		return ComputeNode(name: "VHost 001",
 						   description: "Sample VHost",

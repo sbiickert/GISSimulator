@@ -14,6 +14,14 @@ public struct ServiceProvider: Described, Validatable, Hashable {
 	public var primary: ComputeNode?
 	public var nodes: [ComputeNode]
 	
+	public init(name: String, description: String, service: Service, primary: ComputeNode? = nil, nodes: [ComputeNode]) {
+		self.name = name
+		self.description = description
+		self.service = service
+		self.nodes = nodes
+		self.primary = (primary == nil && !nodes.isEmpty) ? nodes.first : primary // Convenience
+	}
+	
 	var handlerNode: ComputeNode {
 		switch service.balancingModel {
 		case .Single, .Failover:

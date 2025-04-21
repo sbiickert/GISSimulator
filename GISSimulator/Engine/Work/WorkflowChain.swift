@@ -13,6 +13,18 @@ public struct WorkflowChain: Described, Validatable {
 	public var steps: [WorkflowDefStep]
 	public var serviceProviders: Set<ServiceProvider>
 	
+	public init(name: String, description: String, steps: [WorkflowDefStep], serviceProviders: Set<ServiceProvider>,
+				addClient cWDS: WorkflowDefStep? = nil) {
+		self.name = name
+		self.description = description
+		if let cWDS = cWDS {
+			self.steps = [cWDS] + steps
+		}
+		else {
+			self.steps = steps
+		}
+		self.serviceProviders = serviceProviders
+	}
 	public var isValid: Bool {
 		validate().isEmpty
 	}
@@ -30,6 +42,15 @@ public struct WorkflowChain: Described, Validatable {
 		}
 		
 		return messages
+	}
+	
+	public mutating func set(clientStep cWDS: WorkflowDefStep) {
+		steps.insert(cWDS, at: 0)
+	}
+	
+	public mutating func update(clientStep cWDS: WorkflowDefStep) {
+		steps.removeFirst()
+		set(clientStep: cWDS)
 	}
 	
 	public var allRequiredServiceTypes: Set<String> {

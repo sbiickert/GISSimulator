@@ -34,7 +34,8 @@ struct WorkflowDefTest {
 				WorkflowDefStepTest.sampleRelationalWorkflowService
 			], serviceProviders: Set<ServiceProvider>())
 		
-		let withOverlay = wf.add(chain: overlay)
+		var withOverlay = wf
+		withOverlay.add(chain: overlay)
 		#expect(withOverlay.chains.count == 3)
 		#expect(withOverlay.chains[0].steps[3].serviceType == "feature")
 		#expect(withOverlay.chains[0].steps[4].serviceType == "relational")
@@ -43,37 +44,60 @@ struct WorkflowDefTest {
 	
 	@Test func removeChain() async throws {
 		let wf = WorkflowDefTest.sampleWebWorkflowDef
-		let withoutOverlay = wf.removeChain(at: 0)
+		var withoutOverlay = wf
+		withoutOverlay.removeChain(at: 0)
 		#expect(withoutOverlay.chains.count == 1)
 		#expect(wf.chains[0].steps[3].serviceType == "map")
 		#expect(wf.chains[0].steps[4].serviceType == "dbms")
 		#expect(withoutOverlay.allRequiredServiceTypes == Set(["portal", "file", "browser", "map", "web"]))
 	}
+	
+	@Test func swapClients() async throws {
+		#expect(false)
+	}
 
 	// Chains
-	static let sampleWebDynamicMapChain: WorkflowChain = WorkflowChain(
-		name: "Dynamic Map Image",
-		description: "",
-		steps: [
-			WorkflowDefStepTest.sampleBrowserWorkflowDefStep,
-			WorkflowDefStepTest.sampleWebWorkflowDefStep,
-			WorkflowDefStepTest.samplePortalWorkflowDefStep,
-			WorkflowDefStepTest.sampleDynMapWorkflowDefStep,
-			WorkflowDefStepTest.sampleDBMSWorkflowDefStep
-		],
-		serviceProviders: Set<ServiceProvider>())
+	static func sampleDynamicMapChain(client: WorkflowDefStep) -> WorkflowChain {
+		return WorkflowChain(
+			name: "Dynamic Map Image",
+			description: "",
+			steps: [
+				WorkflowDefStepTest.sampleWebWorkflowDefStep,
+				WorkflowDefStepTest.samplePortalWorkflowDefStep,
+				WorkflowDefStepTest.sampleDynMapWorkflowDefStep,
+				WorkflowDefStepTest.sampleDBMSWorkflowDefStep
+			],
+			serviceProviders: Set<ServiceProvider>(),
+			addClient: client)
+	}
 
-	static let sampleWebCachedMapChain: WorkflowChain = WorkflowChain(
-		name: "Dynamic Map Image",
-		description: "",
-		steps: [
-			WorkflowDefStepTest.sampleBrowserWorkflowDefStep,
-			WorkflowDefStepTest.sampleWebWorkflowDefStep,
-			WorkflowDefStepTest.samplePortalWorkflowDefStep,
-			WorkflowDefStepTest.sampleCachedMapWorkflowDefStep,
-			WorkflowDefStepTest.sampleFileWorkflowDefStep
-		],
-		serviceProviders: Set<ServiceProvider>())
+	static func sampleBasemapChain(client: WorkflowDefStep) -> WorkflowChain {
+		return WorkflowChain(
+			name: "Cached Map Image",
+			description: "",
+			steps: [
+				WorkflowDefStepTest.sampleWebWorkflowDefStep,
+				WorkflowDefStepTest.samplePortalWorkflowDefStep,
+				WorkflowDefStepTest.sampleCachedMapWorkflowDefStep,
+				WorkflowDefStepTest.sampleFileWorkflowDefStep
+			],
+			serviceProviders: Set<ServiceProvider>(),
+			addClient: client)
+	}
+
+	static func sampleHostedFeatureChain(client: WorkflowDefStep) -> WorkflowChain {
+		return WorkflowChain(
+			name: "Hosted Features",
+			description: "",
+			steps: [
+				WorkflowDefStepTest.sampleWebWorkflowDefStep,
+				WorkflowDefStepTest.samplePortalWorkflowDefStep,
+				WorkflowDefStepTest.sampleHostedWorkflowDefStep,
+				WorkflowDefStepTest.sampleRelationalWorkflowService
+			],
+			serviceProviders: Set<ServiceProvider>(),
+			addClient: client)
+	}
 
 	static let sampleProChain: WorkflowChain = WorkflowChain(
 		name: "Pro DC",
@@ -81,18 +105,6 @@ struct WorkflowDefTest {
 		steps: [
 			WorkflowDefStepTest.sampleProWorkflowDefStep,
 			WorkflowDefStepTest.sampleDBMSWorkflowDefStep
-		],
-		serviceProviders: Set<ServiceProvider>())
-	
-	static let sampleProBasemapChain = WorkflowChain(
-		name: "Pro Basemap",
-		description: "",
-		steps: [
-			WorkflowDefStepTest.sampleProWorkflowDefStep,
-			WorkflowDefStepTest.sampleWebWorkflowDefStep,
-			WorkflowDefStepTest.samplePortalWorkflowDefStep,
-			WorkflowDefStepTest.sampleCachedMapWorkflowDefStep,
-			WorkflowDefStepTest.sampleFileWorkflowDefStep
 		],
 		serviceProviders: Set<ServiceProvider>())
 	
@@ -111,23 +123,31 @@ struct WorkflowDefTest {
 		name: "Web Map Definition",
 		description: "Sample Web Map",
 		thinkTimeSeconds: 6,
-		chains: [sampleWebDynamicMapChain, sampleWebCachedMapChain])
+		chains: [sampleDynamicMapChain(client: WorkflowDefStepTest.sampleBrowserWorkflowDefStep),
+				 sampleBasemapChain(client: WorkflowDefStepTest.sampleBrowserWorkflowDefStep)])
 	
 	static let sampleMobileWorkflowDef: WorkflowDef = WorkflowDef(
 		name: "Mobile Map Definition",
 		description: "Sample Mobile Map",
 		thinkTimeSeconds: 10,
-		chains: [sampleWebDynamicMapChain, sampleWebCachedMapChain])
+		chains: [sampleHostedFeatureChain(client: WorkflowDefStepTest.sampleMobileWorkflowDefStep),
+				 sampleBasemapChain(client: WorkflowDefStepTest.sampleMobileWorkflowDefStep)])
 	
 	static let sampleWorkstationWorkflowDef: WorkflowDef = WorkflowDef(
 		name: "Workstation Map Definition",
 		description: "Sample Workstation Map",
 		thinkTimeSeconds: 3,
-		chains: [sampleProChain, sampleWebCachedMapChain])
+		chains: [sampleProChain,
+				 sampleBasemapChain(client: WorkflowDefStepTest.sampleProWorkflowDefStep)])
 	
-	static let sampleVDIWorkflowDef: WorkflowDef = WorkflowDef(
-		name: "VDI Map Definition",
-		description: "Sample VDI Map",
-		thinkTimeSeconds: 3,
-		chains: [sampleProVDIChain, sampleProBasemapChain])
+	static var sampleVDIWorkflowDef: WorkflowDef {
+		// Technically adding two clients: pro and the VDI
+		var basemapChain = sampleBasemapChain(client: WorkflowDefStepTest.sampleProWorkflowDefStep)
+		basemapChain.set(clientStep: WorkflowDefStepTest.sampleVDIWorkflowDefStep)
+		return WorkflowDef(
+			name: "VDI Map Definition",
+			description: "Sample VDI Map",
+			thinkTimeSeconds: 3,
+			chains: [sampleProVDIChain, basemapChain])
+	}
 }
