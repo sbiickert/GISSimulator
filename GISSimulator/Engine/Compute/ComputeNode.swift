@@ -58,7 +58,7 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 						  channelCount: c)
 	}
 	
-	public func addVirtualHost(vCores: Int, memoryGB: Int) -> ComputeNode {
+	public mutating func addVirtualHost(vCores: Int, memoryGB: Int) {
 		guard type == .PhysicalServer else {
 			fatalError("Can only add virtual hosts to physical servers")
 		}
@@ -67,24 +67,20 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 								hardwareDefinition: hardwareDefinition,
 								zone: zone,
 								type: .VirtualServer(vCores: vCores, memoryGB: memoryGB))
-		return add(vHost: vHost)
+		add(vHost: vHost)
 	}
 	
-	func add(vHost: ComputeNode) -> ComputeNode {
+	mutating func add(vHost: ComputeNode) {
 		guard vHost.type != .PhysicalServer && vHost.type != .Client else {
 			fatalError("Can only add virtual hosts to physical servers")
 		}
 		let list = virtualHosts + [vHost]
-		var copy = self
-		copy.virtualHosts = list
-		return copy
+		virtualHosts = list
 	}
 	
-	public func remove(vHost: ComputeNode) -> ComputeNode {
+	public mutating func remove(vHost: ComputeNode) {
 		let list = virtualHosts.filter { $0 != vHost }
-		var copy = self
-		copy.virtualHosts = list
-		return copy
+		virtualHosts = list
 	}
 	
 	public var totalVirtualCPUAllocation: Int {

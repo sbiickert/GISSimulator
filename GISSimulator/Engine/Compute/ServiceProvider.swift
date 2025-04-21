@@ -26,22 +26,14 @@ public struct ServiceProvider: Described, Validatable, Hashable {
 		}
 	}
 	
-	func addNode(_ node: ComputeNode) -> ServiceProvider {
-		var copy = self
-		if service.balancingModel == .Single && !nodes.isEmpty {
-			return self
-		}
-		else if service.balancingModel == .Failover && nodes.count >= 2 {
-			return self
-		}
-		copy.nodes = copy.nodes + [node]
-		return copy
+	public mutating func addNode(_ node: ComputeNode) {
+		guard service.balancingModel == .Single && nodes.isEmpty else { return }
+		guard service.balancingModel == .Failover && nodes.count < 2 else { return }
+		nodes = nodes + [node]
 	}
 	
-	func removeNode(_ node: ComputeNode) -> ServiceProvider {
-		var copy = self
-		copy.nodes = copy.nodes.filter { $0.name != node.name }
-		return copy
+	public mutating func removeNode(_ node: ComputeNode) {
+		nodes = nodes.filter { $0 != node }
 	}
 	
 	public var isValid: Bool {

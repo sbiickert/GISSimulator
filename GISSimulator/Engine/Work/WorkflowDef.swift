@@ -13,31 +13,25 @@ public struct WorkflowDef: Described {
 	public var thinkTimeSeconds: Int
 	public var chains: [WorkflowChain]
 	
-	public func add(chain: WorkflowChain) -> WorkflowDef {
-		var copy = self
-		copy.chains = [chain] + chains
-		return copy
+	public mutating func add(chain: WorkflowChain) {
+		chains = [chain] + chains
 	}
 	
-	public func removeChain(at index: Int) -> WorkflowDef {
+	public mutating func removeChain(at index: Int) {
 		guard index >= 0 && index < chains.count else {
 			fatalError("Invalid index \(index)")
 		}
-		var copy = self
-		copy.chains.remove(at: index)
-		return copy
+		chains.remove(at: index)
 	}
 	
 	public var allRequiredServiceTypes: Set<String> {
 		return Set(chains.flatMap(\.allRequiredServiceTypes))
 	}
 	
-	public func updateServiceProviders(at index: Int, serviceProviders: Set<ServiceProvider>) -> WorkflowDef {
+	public mutating func updateServiceProviders(at index: Int, serviceProviders: Set<ServiceProvider>) {
 		guard index >= 0 && index < chains.count else {
 			fatalError()
 		}
-		var copy = self
-		copy.chains[index].serviceProviders = serviceProviders
-		return copy
+		chains[index].serviceProviders = serviceProviders
 	}
 }

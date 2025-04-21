@@ -12,11 +12,34 @@ public struct Design: Described, Validatable {
 	public var description: String
 	public var zones: [Zone] = []
 	public var network: [Connection] = []
-	public var computeNodes: [ComputeNode] = []
 	public var services: Dictionary<String, Service> = [:]
 	public var serviceProviders: [ServiceProvider] = []
 	public var workflows: [Workflow] = []
 	
+	private var _computeNodes: [ComputeNode] = []
+	
+	/**
+	 Returns all clients, physical servers and virtual servers on physical hosts
+	 */
+	public var computeNodes: [ComputeNode] {
+		get {
+			let allNodes: [[ComputeNode]] = _computeNodes.map({ node in
+				switch node.type {
+				case .Client:
+					return [node]
+				case .PhysicalServer:
+					return [node] + node.virtualHosts
+				case .VirtualServer(_, _):
+					fatalError("Virtual servers should not be in the Design's _computeNodes. They are in Physical Servers.")
+				}
+			})
+			return allNodes.flatMap { $0 }
+		}
+		set {
+			_computeNodes = newValue.filter({$0.type == .Client || $0.type == .PhysicalServer})
+		}
+	}
+
 	public var isValid: Bool {
 		return validate().isEmpty
 	}
@@ -61,15 +84,11 @@ public struct Design: Described, Validatable {
 
 	/** Creates a new zone if it doesn't already exist.
 	  *  Creates a local network connection to save a step. */
-	public func add(zone: Zone, localBandwidthMbps: Int, localLatencyMs: Int) -> Self {
-		guard !zones.contains(zone) else { return self }
-		let updatedZones = self.zones + [zone]
+	public mutating func add(zone: Zone, localBandwidthMbps: Int, localLatencyMs: Int) {
+		guard !zones.contains(zone) else { return }
+		zones = zones + [zone]
 		let internalConnection = zone.selfConnect(bandwidthMbps: localBandwidthMbps, latencyMs: localLatencyMs)
-		let updatedConnections = network + [internalConnection]
-		var copy = self
-		copy.zones = updatedZones
-		copy.network = updatedConnections
-		return copy
+		network = network + [internalConnection]
 	}
 	
 	/**
@@ -79,64 +98,13 @@ public struct Design: Described, Validatable {
 	 * - Updates the list of service providers affected by removal of compute nodes
 	 * - Updates any workflows that are impacted by the change in service providers
 	 * @param zone
-	 * @return the altered Design
 	 */
-	public func remove(zone: Zone) -> Self {
-		let updatedZones = zones.filter({$0 != zone})
-		let updatedConnections = network.filter({$0.destination != zone && $0.source != zone})
-		let updatedNodes = computeNodes.filter({$0.zone != zone})
-		let updatedSPs = Design.update(serviceProviders: serviceProviders, with: updatedNodes)
-		let updatedWorkflows = Design.update(workflows: workflows, with: updatedSPs)
-		var copy = self
-		copy.zones = updatedZones
-		copy.network = updatedConnections
-		copy.computeNodes = updatedNodes
-		copy.serviceProviders = updatedSPs
-		copy.workflows = updatedWorkflows
-		return copy
-	}
-	
-	/**
-	 * Replaces a zone with another in the Design. Follow on effects:
-	 * - Updates any connections running to/from the zone
-	 * - Updates any compute nodes in the zone
-	 * - Updates the list of service providers affected by change of compute nodes
-	 * - Updates any workflows that are impacted by the change in service providers
-	 * @param zone
-	 * @return the altered Design
-	 */
-	public func replace(zone original: Zone, with replacement: Zone) -> Self {
-		let updatedZones = zones.filter({ $0 != original })
-		let updatedConnections = network.map({ conn in
-			if conn.source == original {
-				var copy = conn
-				copy.source = replacement
-				return copy
-			}
-			else if conn.destination == original {
-				var copy = conn
-				copy.destination = replacement
-				return copy
-			}
-			return conn
-		})
-		let updatedNodes = computeNodes.map({ node in
-			if node.zone == original {
-				var copy = node
-				copy.zone = replacement
-				return copy
-			}
-			return node
-		})
-		let updatedSPs = Design.update(serviceProviders: serviceProviders, with: updatedNodes)
-		let updatedWorkflows = Design.update(workflows: workflows, with: updatedSPs)
-		var copy = self
-		copy.zones = updatedZones
-		copy.network = updatedConnections
-		copy.computeNodes = updatedNodes
-		copy.serviceProviders = updatedSPs
-		copy.workflows = updatedWorkflows
-		return copy
+	public mutating func remove(zone: Zone) {
+		zones = zones.filter({$0 != zone})
+		network = network.filter({$0.destination != zone && $0.source != zone})
+		computeNodes = computeNodes.filter({$0.zone != zone})
+		updateServiceProvidersWithNewComputeNodes()
+		updateWorkflowsWithNewServiceProviders()
 	}
 	
 	public func getZone(named name: String) -> Zone? {
@@ -150,8 +118,8 @@ public struct Design: Described, Validatable {
 	/** Create a new connection if it doesn't exist.
 	 *  Adds a reciprocal connection if specified.
 	 *  Only alters the Design. */
-	public func add(connection conn: Connection, addReciprocalConnection: Bool) -> Design {
-		guard !network.contains(conn) else { return self }
+	public mutating func add(connection conn: Connection, addReciprocalConnection: Bool) {
+		guard !network.contains(conn) else { return }
 		var updatedNetwork = network + [conn]
 		if addReciprocalConnection {
 			let reciprocalConn = conn.invert()
@@ -159,32 +127,12 @@ public struct Design: Described, Validatable {
 				updatedNetwork += [reciprocalConn]
 			}
 		}
-		var copy = self
-		copy.network = updatedNetwork
-		return copy
+		network = updatedNetwork
 	}
 	
 	/** Removes a connection. Only alters the Design. */
-	public func remove(connection conn: Connection) -> Design {
-		let updatedNetwork = network.filter({$0 != conn})
-		var copy = self
-		copy.network = updatedNetwork
-		return copy
-	}
-	
-	/**
-	  * Replaces one connection with another. Alters the Design.
-	  * @param original: the connection being replaced
-	  * @param updated: the replacement connection
-	  * @return The modified Design
-	  */
-	public func replace(connection original: Connection, with updated: Connection) -> Design {
-		var updatedNetwork = network
-		updatedNetwork.removeAll(where: { $0 == original })
-		updatedNetwork += [updated]
-		var copy = self
-		copy.network = updatedNetwork
-		return copy
+	public mutating func remove(connection conn: Connection) {
+		network = network.filter({$0 != conn})
 	}
 	
 	
@@ -193,87 +141,75 @@ public struct Design: Described, Validatable {
 	//
 	
 	/**
-	 * Adds a physical host in a Zone.
-	 * @param host: the physical host being added.
-	 * @return The modified Design
+	 * Adds a physical compute node in a Zone.
+	 * @param computeNode: the physical compute node being added.
 	 */
-//	public func add(host: PhysicalHost) -> Design {
-//		return add(computeNode: host)
-//	}
-//	
-//	public func add(client: Client) -> Design {
-//		return add(computeNode: client)
-//	}
-//	
-//	public func add(computeNode: ComputeNode) -> Design {
-//		guard !computeNodes.contains(where: { $0.isEqualTo(computeNode) }) else { return self }
-//		var copy = self
-//		copy.computeNodes += [computeNode]
-//		return copy
-//	}
-//	
-//	/**
-//	  * Removes a physical host from a Zone. All VMs hosted on it are removed.
-//	  * Updates service providers that referenced the removed compute nodes.
-//	  * Updates workflows that referenced the updated service providers
-//	  * @param host: the physical host being removed.
-//	  * @return The modified Design
-//	  */
-//	public func remove(host: PhysicalHost) -> Design {
-////		var vHostsToRemove: [VirtualHost] = []
-////		for vh in host.virtualHosts {
-////			if let node = computeNodes.first(where: { $0.isEqualTo(vh) }) {
-////				vHostsToRemove.append(vh)
-////			}
-////		}
-//		return remove(computeNodes: [host] + host.virtualHosts)
-//	}
-//	
-//	public func remove(client: Client) -> Design {
-//		return remove(computeNodes: [client])
-//	}
-//	
-//	func remove(computeNodes nodes: [ComputeNode]) -> Design {
-//		let updatedNodes = computeNodes.filter({computeNodes.contains(where: $0.isEqualTo(computeNode)})
-//		let updatedSPs = Design.update(serviceProviders: serviceProviders, with: updatedNodes)
-//		let updatedWorkflows = Design.update(workflows: workflows, with: updatedSPs)
-//		var copy = self
-//		copy.computeNodes = updatedNodes
-//		copy.serviceProviders = updatedSPs
-//		copy.workflows = updatedWorkflows
-//		return copy
-//	}
-//	
-//	/**
-//	 * Replaces a physical host in a Zone. All original VMs hosted on it are removed.
-//	 * and replaced with new ones.
-//	 * Updates service providers that referenced the removed compute nodes.
-//	 * Updates workflows that referenced the updated service providers.
-//	 * @param original: the original physical host
-//	 * @param updated: the updated physical host
-//	 * @return The modified Design
-//	 */
-//	public func replace(host original: PhysicalHost, with updated: PhysicalHost) -> Design {
-//		var updatedNodes = computeNodes.filter({!$0.isEqualTo(original)})
-//		updatedNodes.append(updated)
-//	}
+	public mutating func add(computeNode: ComputeNode) {
+		guard computeNode.type == .Client || computeNode.type == .PhysicalServer else {
+			fatalError("Cannot add virtual server to Design directly. Add it to a physical server.")
+		}
+		guard !computeNodes.contains(computeNode) else { return }
+		computeNodes = computeNodes + [computeNode]
+	}
+	
+	/**
+	  * Removes a physical host from the Design. All VMs hosted on it are removed.
+	  * Updates service providers that referenced the removed compute nodes.
+	  * Updates workflows that referenced the updated service providers
+	  * @param host: the physical host being removed.
+	  */
+	public mutating func remove(computeNode node: ComputeNode) {
+		guard node.type == .Client || node.type == .PhysicalServer else {
+			fatalError("Cannot add virtual server to Design directly. Add it to a physical server.")
+		}
+		computeNodes = computeNodes.filter({$0 != node})
+		updateServiceProvidersWithNewComputeNodes()
+		updateWorkflowsWithNewServiceProviders()
+	}
 	
 
 	//
 	// Service Management
 	//
 	
+	public mutating func add(service: Service) {
+		services[service.serviceType] = service
+	}
+	
+	public mutating func remove(service: Service) {
+		services.removeValue(forKey: service.serviceType)
+		serviceProviders = serviceProviders.filter({$0.service != service})
+		updateWorkflowsWithNewServiceProviders()
+	}
 	
 	
 	//
 	// Service Provider Management
 	//
 	
+	public mutating func add(serviceProvider: ServiceProvider) {
+		guard !serviceProviders.contains(serviceProvider) else { return }
+		serviceProviders = serviceProviders + [serviceProvider]
+	}
+	
+	public mutating func remove(serviceProvider: ServiceProvider) {
+		serviceProviders = serviceProviders.filter({$0 != serviceProvider})
+		updateWorkflowsWithNewServiceProviders()
+	}
+	
 	
 	//
 	// Workflow Management
 	//
 	
+	public mutating func add(workflow: Workflow) {
+		guard !workflows.contains(workflow) else { return }
+		workflows = workflows + [workflow]
+	}
+	
+	public mutating func remove(workflow: Workflow) {
+		workflows = workflows.filter({$0 != workflow})
+	}
 	
 	
 	//
@@ -299,21 +235,43 @@ public struct Design: Described, Validatable {
 		return "Design_\(nextID)"
 	}
 
-	static func update(serviceProviders: [ServiceProvider], with newNodes: [ComputeNode]) -> [ServiceProvider] {
-		serviceProviders.map({ sp in
+//	static func update(serviceProviders: [ServiceProvider], with newNodes: [ComputeNode]) -> [ServiceProvider] {
+//		serviceProviders.map({ sp in
+//			let updatedNodes = sp.nodes.compactMap({ n in
+//				newNodes.first(where: { $0.name == n.name })
+//			})
+//			var copy = sp
+//			copy.nodes = updatedNodes
+//			return copy
+//		})
+//	}
+
+	private mutating func updateServiceProvidersWithNewComputeNodes() {
+		serviceProviders = serviceProviders.map({ sp in
 			let updatedNodes = sp.nodes.compactMap({ n in
-				newNodes.first(where: { $0.name == n.name })
+				computeNodes.first(where: { $0.name == n.name })
 			})
 			var copy = sp
 			copy.nodes = updatedNodes
 			return copy
 		})
 	}
-	
-	static func update(workflows: [Workflow], with newServiceProviders: [ServiceProvider]) -> [Workflow] {
-		workflows.map({ w in
+
+//	static func update(workflows: [Workflow], with newServiceProviders: [ServiceProvider]) -> [Workflow] {
+//		workflows.map({ w in
+//			let uSPs = w.defaultServiceProviders.compactMap({ sp in
+//				newServiceProviders.first(where: { $0.name == sp.name })
+//			})
+//			var copy = w
+//			copy.defaultServiceProviders = Set(uSPs)
+//			return copy
+//		})
+//	}
+
+	private mutating func updateWorkflowsWithNewServiceProviders() {
+		workflows = workflows.map({ w in
 			let uSPs = w.defaultServiceProviders.compactMap({ sp in
-				newServiceProviders.first(where: { $0.name == sp.name })
+				serviceProviders.first(where: { $0.name == sp.name })
 			})
 			var copy = w
 			copy.defaultServiceProviders = Set(uSPs)

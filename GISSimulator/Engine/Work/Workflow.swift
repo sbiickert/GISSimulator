@@ -13,7 +13,11 @@ public enum WorkflowType: String, CaseIterable {
 	case Transactional = "Transactional"
 }
 
-public struct Workflow: Described, Validatable {
+public struct Workflow: Described, Validatable, Equatable {
+	public static func == (lhs: Workflow, rhs: Workflow) -> Bool {
+		return lhs.name == rhs.name && lhs.description == rhs.description && lhs.type == rhs.type
+	}
+	
 	public var name: String
 	public var description: String
 	public var type: WorkflowType
@@ -49,10 +53,8 @@ public struct Workflow: Described, Validatable {
 		return copy
 	}
 	
-	public func updateServiceProviders(at index: Int, serviceProviders: Set<ServiceProvider>) -> Workflow {
-		var copy = self
-		copy.definition = definition.updateServiceProviders(at: index, serviceProviders: serviceProviders)
-		return copy
+	public mutating func updateServiceProviders(at index: Int, serviceProviders: Set<ServiceProvider>) {
+		definition.updateServiceProviders(at: index, serviceProviders: serviceProviders)
 	}
 	
 	public func createClientRequests(network: [Connection], clock: Int) -> (ClientRequestGroup, [ClientRequest]) {
