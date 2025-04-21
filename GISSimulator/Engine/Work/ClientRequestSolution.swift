@@ -18,7 +18,7 @@ public struct ClientRequestSolution {
 	}
 	
 	public static func createSolution(for chain: WorkflowChain, in network: [Connection]) -> ClientRequestSolution {
-		guard !chain.isValid else {
+		guard chain.isValid else {
 			fatalError("Invalid workflow chain")
 		}
 		// Starting at the head of the chain (client), stop at each
@@ -58,7 +58,7 @@ public struct ClientRequestSolution {
 		}
 		
 		// Now retrace back to client
-		for i in (0..<steps.count-1).reversed() {
+		for i in (0..<chain.steps.count-1).reversed() {
 			step = chain.steps[i]
 			let destSP = chain.serviceProviderForStep(at: i)!
 			let destNode = destSP.handlerNode
@@ -68,15 +68,15 @@ public struct ClientRequestSolution {
 			// Add the network steps
 			route.connections.forEach { connection in
 				steps.append(ClientRequestSolutionStep(serviceTimeCalculator: connection,
-													   isResponse: false,
-													   dataSize: step.requestSizeKB,
+													   isResponse: true,
+													   dataSize: step.responseSizeKB,
 													   chatter: step.chatter,
 													   serviceTime: 0)) // Service time is derived from the data size
 			}
 			// Add the next compute step
 			steps.append(ClientRequestSolutionStep(serviceTimeCalculator: destNode,
-												   isResponse: false,
-												   dataSize: step.requestSizeKB,
+												   isResponse: true,
+												   dataSize: step.responseSizeKB,
 												   chatter: 0, // No chatter for compute step
 												   serviceTime: step.serviceTime))
 			sourceSP = destSP

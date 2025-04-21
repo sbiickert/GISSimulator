@@ -43,21 +43,20 @@ public struct Zone: Described, Equatable, Hashable {
 			exitConnections(in: network).count > 0
 	}
 	
-	func clients(in computeNodes: [ComputeNode]) -> [Client] {
-		return computeNodes.compactMap({$0 as? Client ?? nil})
+	func clients(in computeNodes: [ComputeNode]) -> [ComputeNode] {
+		return computeNodes.filter({$0.type == .Client})
 			.filter({$0.zone == self})
 	}
 	
 	func servers(in computeNodes: [ComputeNode]) -> [ComputeNode] {
-		let pHosts = computeNodes.compactMap({$0 as? PhysicalHost ?? nil})
-		let vHosts = computeNodes.compactMap({$0 as? VirtualHost ?? nil})
-		return pHosts.filter({$0.zone == self}) + vHosts.filter({$0.zone == self})
+		let hosts = computeNodes.filter({$0.type != .Client})
+		return hosts.filter({$0.zone == self})
 	}
 	
 	func workflows(in wfList: [Workflow]) -> [Workflow] {
 		wfList.filter({
 			let clientNodes = $0.defaultServiceProviders.flatMap({$0.nodes})
-				.filter({$0 is Client})
+				.filter({$0.type == .Client})
 			return (clientNodes.first?.zone ?? nil) == self
 		})
 	}

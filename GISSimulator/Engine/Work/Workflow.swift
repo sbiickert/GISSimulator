@@ -64,7 +64,7 @@ public struct Workflow: Described, Validatable {
 		return (group, requests)
 	}
 	
-	private var _random = GKRandomSource()
+	var _random = GKRandomSource()
 	
 	public func calculateNextEventTime(clock: Int) -> Int {
 		// transactionRate is transactions per hour

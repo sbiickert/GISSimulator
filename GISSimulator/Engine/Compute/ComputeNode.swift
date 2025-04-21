@@ -7,25 +7,31 @@
 
 import Foundation
 
-public protocol ComputeNode: Described, ServiceTimeCalculator, QueueProvider {
-	var hardwareDefinition: HardwareDef {get}
-	var zone: Zone {get}
-	func adjustedServiceTime(for serviceTime: Int) -> Int
+public enum ComputeNodeType: Equatable {
+	case Client
+	case PhysicalServer
+	case VirtualServer(vCores: Int, memoryGB: Int)
 }
 
-func adjustedServiceTime(_ serviceTime: Int, with hardwareDef: HardwareDef) -> Int {
-	let relative = HardwareDef.BaselinePerCore / hardwareDef.specIntRate2017PerCore
-	return Int(Double(serviceTime) * relative)
-}
-
-public struct Client: ComputeNode {
+public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable {
 	public var name: String
 	public var description: String
 	public var hardwareDefinition: HardwareDef
 	public var zone: Zone
-	
+	public var type: ComputeNodeType
+	public var virtualHosts: [ComputeNode] = []
+
+	public var vCoreCount: Int? {
+		switch type {
+		case .VirtualServer(vCores: let vCores, memoryGB: _):
+			return vCores
+		default:
+			return nil
+		}
+	}
 	public func adjustedServiceTime(for serviceTime: Int) -> Int {
-		GISSimulator.adjustedServiceTime(serviceTime, with: hardwareDefinition)
+		let relative = HardwareDef.BaselinePerCore / hardwareDefinition.specIntRate2017PerCore
+		return Int(Double(serviceTime) * relative)
 	}
 	
 	public func calculateServiceTime(for request: ClientRequest) -> Int? {
@@ -38,100 +44,54 @@ public struct Client: ComputeNode {
 	}
 	
 	public func provideQueue() -> MultiQueue {
-		MultiQueue(serviceTimeCalculator: self,
-				   waitMode: .Processing,
-				   channelCount: 1000) // Arbitrary large number. Clients represent a group, not a PC.
-	}
-}
-
-public struct PhysicalHost: ComputeNode {
-	public var name: String
-	public var description: String
-	public var hardwareDefinition: HardwareDef
-	public var zone: Zone
-	public var virtualHosts: [VirtualHost] = []
-	
-	public func adjustedServiceTime(for serviceTime: Int) -> Int {
-		GISSimulator.adjustedServiceTime(serviceTime, with: hardwareDefinition)
+		let c: Int
+		switch type {
+		case .Client:
+			c = 1000 // Arbitrary large number. Clients represent a group, not a PC.
+		case .PhysicalServer:
+			c = hardwareDefinition.cores
+		case .VirtualServer(let vCores, _):
+			c = vCores
+		}
+		return MultiQueue(serviceTimeCalculator: self,
+						  waitMode: .Processing,
+						  channelCount: c)
 	}
 	
-	public func calculateServiceTime(for request: ClientRequest) -> Int? {
-		guard request.solution.currentStep != nil else { return nil }
-		return adjustedServiceTime(for: request.solution.currentStep!.serviceTime)
+	public func addVirtualHost(vCores: Int, memoryGB: Int) -> ComputeNode {
+		guard type == .PhysicalServer else {
+			fatalError("Can only add virtual hosts to physical servers")
+		}
+		let vHost = ComputeNode(name: "VH \(name):\(virtualHosts.count)",
+								description: "",
+								hardwareDefinition: hardwareDefinition,
+								zone: zone,
+								type: .VirtualServer(vCores: vCores, memoryGB: memoryGB))
+		return add(vHost: vHost)
 	}
 	
-	public func calculateLatency(for request: ClientRequest) -> Int? {
-		return nil // No latency on a compute step
-	}
-	
-	public func provideQueue() -> MultiQueue {
-		MultiQueue(serviceTimeCalculator: self,
-				   waitMode: .Processing,
-				   channelCount: hardwareDefinition.cores)
-	}
-	
-	public func add(vCores: Int, memoryGB: Int) -> PhysicalHost {
-		add(vHost: VirtualHost(name: "VH \(name):\(virtualHosts.count)",
-							   description: "",
-							   hardwareDefinition: hardwareDefinition,
-							   zone: zone,
-							   vCores: vCores,
-							   memoryGB: memoryGB))
-	}
-	
-	public func add(vHost: VirtualHost) -> PhysicalHost {
+	func add(vHost: ComputeNode) -> ComputeNode {
+		guard vHost.type != .PhysicalServer && vHost.type != .Client else {
+			fatalError("Can only add virtual hosts to physical servers")
+		}
 		let list = virtualHosts + [vHost]
 		var copy = self
 		copy.virtualHosts = list
 		return copy
 	}
 	
-	public func remove(vHost: VirtualHost) -> PhysicalHost {
+	public func remove(vHost: ComputeNode) -> ComputeNode {
 		let list = virtualHosts.filter { $0 != vHost }
 		var copy = self
 		copy.virtualHosts = list
 		return copy
 	}
 	
-	public func migrate(vHost: VirtualHost, to newHost: PhysicalHost) -> (PhysicalHost, PhysicalHost) {
-		let selfCopy = self.remove(vHost: vHost)
-		let newHostCopy = newHost.add(vHost: vHost)
-		return (selfCopy, newHostCopy)
-	}
-	
 	public var totalVirtualCPUAllocation: Int {
-		virtualHosts.reduce(0) { $0 + $1.vCores }
+		return virtualHosts
+			.reduce(0, {$0 + ($1.vCoreCount ?? 0)})
 	}
 	public var totalPhysicalCPUAllocation: Int {
 		Int(Double(totalVirtualCPUAllocation) * hardwareDefinition.threading.factor)
-	}
-}
-
-public struct VirtualHost: ComputeNode, Equatable {
-	public var name: String
-	public var description: String
-	public var hardwareDefinition: HardwareDef
-	public var zone: Zone
-	public var vCores: Int
-	public var memoryGB: Int
-	
-	public func adjustedServiceTime(for serviceTime: Int) -> Int {
-		GISSimulator.adjustedServiceTime(serviceTime, with: hardwareDefinition)
-	}
-	
-	
-	public func calculateServiceTime(for request: ClientRequest) -> Int? {
-		guard request.solution.currentStep != nil else { return nil }
-		return adjustedServiceTime(for: request.solution.currentStep!.serviceTime)
-	}
-	
-	public func calculateLatency(for request: ClientRequest) -> Int? {
-		return nil // No latency on a compute step
-	}
-	
-	public func provideQueue() -> MultiQueue {
-		MultiQueue(serviceTimeCalculator: self,
-				   waitMode: .Processing,
-				   channelCount: vCores)
 	}
 }

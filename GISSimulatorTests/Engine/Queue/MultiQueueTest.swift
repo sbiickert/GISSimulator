@@ -16,9 +16,9 @@ struct MultiQueueTest {
 		#expect(connQ.serviceTimeCalculator as! Connection == ConnectionTest.sampleConnectionToInternet)
 		
 		let vmQ = MultiQueueTest.sampleComputeQ
-		#expect(vmQ.serviceTimeCalculator is VirtualHost)
-		#expect(vmQ.serviceTimeCalculator as! VirtualHost == ComputeNodeTest.sampleVHost)
-		#expect(vmQ.channelCount == ComputeNodeTest.sampleVHost.vCores)
+		#expect(vmQ.serviceTimeCalculator is ComputeNode)
+		#expect(vmQ.serviceTimeCalculator as! ComputeNode == ComputeNodeTest.sampleVHost)
+		#expect(vmQ.channelCount == ComputeNodeTest.sampleVHost.vCoreCount!)
 	}
 	
 	@Test func networkEnqueue() async throws {
@@ -110,7 +110,7 @@ struct MultiQueueTest {
 	
 	static var sampleComputeQ: MultiQueue {
 		let vm = ComputeNodeTest.sampleVHost
-		return MultiQueue(serviceTimeCalculator: vm, waitMode: .Processing, channelCount: vm.vCores)
+		return MultiQueue(serviceTimeCalculator: vm, waitMode: .Processing, channelCount: vm.vCoreCount!)
 	}
 	
 	static var sampleConnectionCR: ClientRequest {

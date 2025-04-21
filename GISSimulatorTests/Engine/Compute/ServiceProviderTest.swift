@@ -53,7 +53,7 @@ struct ServiceProviderTest {
     }
 
 	static let vm = ComputeNodeTest.sampleVHost
-	static func vm(named name: String) -> VirtualHost {
+	static func vm(named name: String) -> ComputeNode {
 		var copy = vm
 		copy.name = name
 		return copy

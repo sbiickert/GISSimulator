@@ -15,7 +15,7 @@ public struct WorkflowDef: Described {
 	
 	public func add(chain: WorkflowChain) -> WorkflowDef {
 		var copy = self
-		copy.chains = chains + [chain]
+		copy.chains = [chain] + chains
 		return copy
 	}
 	

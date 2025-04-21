@@ -19,30 +19,32 @@ struct ComputeNodeTest {
 		#expect(host.name == "Host 001")
 		#expect(host.hardwareDefinition.cores == 12)
 		#expect(host.virtualHosts.count == 1)
-		#expect(host.virtualHosts[0].vCores == 4)
+		#expect(host.virtualHosts[0].vCoreCount != nil)
+		#expect(host.virtualHosts[0].vCoreCount! == 4)
     }
 
-	static var sampleClient: Client {
-		return Client(name: "Client 001",
-					  description: "Sample PC",
-					  hardwareDefinition: HardwareDefTest.sampleClientHWDef,
-					  zone: ZoneTest.sampleIntranetZone)
+	static var sampleClient: ComputeNode {
+		return ComputeNode(name: "Client 001",
+						   description: "Sample PC",
+						   hardwareDefinition: HardwareDefTest.sampleClientHWDef,
+						   zone: ZoneTest.sampleIntranetZone,
+						   type: .Client)
 	}
 	
-	static var sampleVHost: VirtualHost {
-		return VirtualHost(name: "VHost 001",
+	static var sampleVHost: ComputeNode {
+		return ComputeNode(name: "VHost 001",
 						   description: "Sample VHost",
 						   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
 						   zone: ZoneTest.sampleIntranetZone,
-						   vCores: 4,
-						   memoryGB: 16)
+						   type: .VirtualServer(vCores: 4, memoryGB: 16))
 	}
 	
-	static var sampleHost: PhysicalHost {
-		return PhysicalHost(name: "Host 001",
-							description: "Sample Physical Host",
-							hardwareDefinition: HardwareDefTest.sampleServerHWDef,
-							zone: ZoneTest.sampleIntranetZone,
-							virtualHosts: [sampleVHost])
+	static var sampleHost: ComputeNode {
+		return ComputeNode(name: "Host 001",
+						   description: "Sample Physical Host",
+						   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+						   zone: ZoneTest.sampleIntranetZone,
+						   type: .PhysicalServer,
+						   virtualHosts: [sampleVHost])
 	}
 }

@@ -11,7 +11,7 @@ public struct ServiceProvider: Described, Validatable, Hashable {
 	public var name: String
 	public var description: String
 	public var service: Service
-	public var primary: (any ComputeNode)?
+	public var primary: ComputeNode?
 	public var nodes: [ComputeNode]
 	
 	var handlerNode: ComputeNode {
