@@ -25,7 +25,10 @@ public struct ClientRequestSolution {
 		// service provider, traversing the network between each
 		var step = chain.steps.first!
 		var sourceSP = chain.serviceProvider(for: step)!
-		var sourceNode = sourceSP.handlerNode
+		var handlerNode = sourceSP.handlerNode
+		guard handlerNode != nil else { fatalError("No handler node for \(sourceSP)")}
+		var sourceNode = handlerNode!
+		
 		var steps: [ClientRequestSolutionStep] = []
 		steps.append(ClientRequestSolutionStep(serviceTimeCalculator: sourceNode,
 											   isResponse: false,
@@ -35,7 +38,9 @@ public struct ClientRequestSolution {
 		for i in 1..<chain.steps.count {
 			step = chain.steps[i]
 			let destSP = chain.serviceProviderForStep(at: i)!
-			let destNode = destSP.handlerNode
+			let handlerNode = destSP.handlerNode
+			guard handlerNode != nil else { fatalError("No handler node for \(destSP)")}
+			let destNode = handlerNode!
 			guard let route = Route.findRoute(from: sourceNode.zone, to: destNode.zone, in: network) else {
 				fatalError("Could not find route from \(sourceNode.zone.name) to \(destNode.zone.name)")
 			}
@@ -61,7 +66,9 @@ public struct ClientRequestSolution {
 		for i in (0..<chain.steps.count-1).reversed() {
 			step = chain.steps[i]
 			let destSP = chain.serviceProviderForStep(at: i)!
-			let destNode = destSP.handlerNode
+			let handlerNode = destSP.handlerNode
+			guard handlerNode != nil else { fatalError("No handler node for \(destSP)")}
+			let destNode = handlerNode!
 			guard let route = Route.findRoute(from: sourceNode.zone, to: destNode.zone, in: network) else {
 				fatalError("Could not find route from \(sourceNode.zone.name) to \(destNode.zone.name)")
 			}

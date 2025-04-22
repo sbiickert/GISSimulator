@@ -68,7 +68,6 @@ struct ServiceProviderTest {
 		let myVM = vm(named: "Portal 001")
 		return ServiceProvider(name: "Portal", description: "Portal Server",
 							   service: ServiceTest.sampleService(for: "portal"),
-							   primary: myVM,
 							   nodes: [myVM])
 	}
 	
@@ -87,7 +86,6 @@ struct ServiceProviderTest {
 		let myVM = vm(named: "SQL 001")
 		return ServiceProvider(name: "SQL Server", description: "Geodatabase Server",
 							   service: ServiceTest.sampleService(for: "dbms"),
-							   primary: myVM,
 							   nodes: [myVM])
 	}
 	
@@ -96,15 +94,14 @@ struct ServiceProviderTest {
 		let myVM2 = vm(named: "DS 002")
 		return ServiceProvider(name: "Relational DS", description: "HA Datastore",
 							   service: ServiceTest.sampleService(for: "relational"),
-							   primary: myVM1,
-							   nodes: [myVM1, myVM2])
+							   nodes: [myVM1, myVM2],
+							   primaryIndex: 0)
 	}
 	
 	static var sampleFileServiceProvider: ServiceProvider {
 		let myVM = vm(named: "File 001")
 		return ServiceProvider(name: "File Server", description: "File Server",
 							   service: ServiceTest.sampleService(for: "file"),
-							   primary: myVM,
 							   nodes: [myVM])
 	}
 	
@@ -112,7 +109,6 @@ struct ServiceProviderTest {
 		let myVM = vm(named: "Citrix 001")
 		return ServiceProvider(name: "VDI", description: "Citrix Server",
 							   service: ServiceTest.sampleService(for: "vdi"),
-							   primary: myVM,
 							   nodes: [myVM])
 	}
 	
@@ -120,7 +116,6 @@ struct ServiceProviderTest {
 		let client = ComputeNodeTest.sampleClient
 		return ServiceProvider(name: "Chrome", description: "PC Workstation",
 							   service: ServiceTest.sampleService(for: "browser"),
-							   primary: client,
 							   nodes: [client])
 	}
 	
@@ -128,7 +123,6 @@ struct ServiceProviderTest {
 		let client = ComputeNodeTest.sampleClient
 		return ServiceProvider(name: "Pro", description: "Pro Workstation",
 							   service: ServiceTest.sampleService(for: "pro"),
-							   primary: client,
 							   nodes: [client])
 	}
 

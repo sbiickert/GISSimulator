@@ -78,7 +78,7 @@ public struct Design: Described, Validatable {
 		return messages
 	}
 
-	private mutating func updateServiceProvidersWithNewComputeNodes() {
+	mutating func updateServiceProvidersWithNewComputeNodes() {
 		serviceProviders = serviceProviders.map({ sp in
 			let updatedNodes = sp.nodes.compactMap({ n in
 				computeNodes.first(where: { $0.name == n.name })
@@ -89,7 +89,7 @@ public struct Design: Described, Validatable {
 		})
 	}
 
-	private mutating func updateWorkflowsWithNewServiceProviders() {
+	mutating func updateWorkflowsWithNewServiceProviders() {
 		workflows = workflows.map({ w in
 			let uSPs = w.defaultServiceProviders.compactMap({ sp in
 				serviceProviders.first(where: { $0.name == sp.name })

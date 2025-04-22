@@ -53,7 +53,21 @@ struct WorkflowDefTest {
 	}
 	
 	@Test func swapClients() async throws {
-		#expect(false)
+		var dynChain = WorkflowDefTest.sampleDynamicMapChain(
+			client: WorkflowDefStepTest.sampleBrowserWorkflowDefStep)
+		var hostChain = WorkflowDefTest.sampleHostedFeatureChain(
+			client: WorkflowDefStepTest.sampleMobileWorkflowDefStep)
+		
+		#expect(dynChain.steps[0].serviceType == "browser")
+		#expect(hostChain.steps[0].serviceType == "mobile")
+		#expect(dynChain.steps.count == 5)
+		
+		dynChain.update(clientStep: WorkflowDefStepTest.sampleMobileWorkflowDefStep)
+		hostChain.update(clientStep: WorkflowDefStepTest.sampleBrowserWorkflowDefStep)
+		#expect(dynChain.steps.count == 5)
+
+		#expect(dynChain.steps[0].serviceType == "mobile")
+		#expect(hostChain.steps[0].serviceType == "browser")
 	}
 
 	// Chains

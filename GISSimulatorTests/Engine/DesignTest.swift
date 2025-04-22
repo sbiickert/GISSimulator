@@ -29,23 +29,59 @@ struct DesignTest {
 		#expect(d.workflows.count == 2)
 		
 		#expect(d.isValid)
-		if !d.isValid {
-			print("Validation errors:")
-			d.validate().forEach { print($0) }
-			d.workflows.forEach({wf in
-				if !wf.isValid {
-					print("Workflow \(wf.name):")
-					wf.validate().forEach { print($0) }
-					wf.definition.chains.forEach { chain in
-						if !chain.isValid {
-							print("Chain \(chain.name):")
-							chain.validate().forEach { print($0) }
-						}
+		if !d.isValid { printDesignValidationMessages(d) }
+    }
+	
+	@Test func updateServiceProviderList() async throws {
+		var d = DesignTest.sampleDesign
+		// Update the first VM on SRV01 (the web server)
+		let updatedNodes = d.computeNodes.map({
+				if $0.name != "SRV01" {
+					return $0
+				}
+				var copy = $0
+				copy.virtualHosts[0].description = "Updated"
+				return copy
+			})
+		d.computeNodes = updatedNodes
+		d.updateServiceProvidersWithNewComputeNodes()
+		
+		let updatedSPs = d.serviceProviders
+			.filter({($0.handlerNode?.description ?? "") == "Updated"})
+		#expect(updatedSPs.count == 2) // IIS and Portal are bot on the web server
+		//print(updatedSPs)
+		#expect(d.isValid)
+	}
+	
+	@Test func updateWorkflowList() async throws {
+		var d = DesignTest.sampleDesign
+		var updatedSPs = d.serviceProviders
+		updatedSPs[0].description = "Updated"
+		d.serviceProviders = updatedSPs
+		#expect(d.serviceProviders[0].description == "Updated")
+		let name = d.serviceProviders[0].name
+		d.updateWorkflowsWithNewServiceProviders()
+		#expect(d.workflows[0].defaultServiceProviders.count(where: {$0.name == name && $0.description == "Updated"}) == 1)
+		//print(d)
+		#expect(d.isValid)
+	}
+	
+	private func printDesignValidationMessages(_ d: Design) {
+		print("Validation errors:")
+		d.validate().forEach { print($0) }
+		d.workflows.forEach({wf in
+			if !wf.isValid {
+				print("Workflow \(wf.name):")
+				wf.validate().forEach { print($0) }
+				wf.definition.chains.forEach { chain in
+					if !chain.isValid {
+						print("Chain \(chain.name):")
+						chain.validate().forEach { print($0) }
 					}
 				}
-			})
-		}
-    }
+			}
+		})
+	}
 
 	static var sampleDesign: Design {
 		var d = Design(name: "Sample 01", description: "For testing purposes only")
