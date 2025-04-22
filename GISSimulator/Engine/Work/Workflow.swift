@@ -88,7 +88,7 @@ public struct Workflow: Described, Validatable, Equatable {
 		for chain in invalidChains {
 			messages.append(ValidationMessage(message: "Workflow chain is invalid", source: chain.name))
 		}
-		if transactionRate < 0 {
+		if transactionRate <= 0 {
 			messages.append(ValidationMessage(message: "Transaction rate must be greater or equal to zero", source: name))
 		}
 		

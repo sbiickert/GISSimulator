@@ -205,7 +205,7 @@ struct DesignTest {
 		// Workflows
 		var webWF = Workflow(name: "Web", description: "Web Application", type: .Transactional,
 							 definition: WorkflowDefTest.sampleWebWorkflowDef,
-							 defaultServiceProviders: spLocal, productivity: 1000)
+							 defaultServiceProviders: spLocal, tph: 1000)
 		webWF.applyDefaultServiceProviders()
 		webWF.updateServiceProviders(at: 1, serviceProviders: spAGOL) // Basemap from AGOL
 		d.add(workflow: webWF)

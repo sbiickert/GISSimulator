@@ -13,8 +13,12 @@ public struct ClientRequestSolution {
 	public var currentStep: ClientRequestSolutionStep? {
 		steps.first
 	}
-	public var gotoNextStep: ClientRequestSolution {
-		.init(steps: Array(steps.dropFirst()))
+	public mutating func gotoNextStep() {
+		steps = Array(steps.dropFirst())
+	}
+	
+	public var isFinished: Bool {
+		steps.isEmpty
 	}
 	
 	public static func createSolution(for chain: WorkflowChain, in network: [Connection]) -> ClientRequestSolution {

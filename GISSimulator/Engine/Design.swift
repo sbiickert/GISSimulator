@@ -237,6 +237,10 @@ public struct Design: Described, Validatable {
 		workflows = workflows.filter({$0 != workflow})
 	}
 	
+	public func getWorkflow(named name: String) -> Workflow? {
+		return workflows.first(where: { $0.name == name })
+	}
+
 	
 	//
 	// MARK: - Queues

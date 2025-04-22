@@ -22,7 +22,9 @@ public struct ClientRequest: Described, Equatable {
 	public var requestClock: Int
 	public var solution: ClientRequestSolution
 	public var groupID: Int
-	public var isFinished: Bool = false
+	public var isFinished: Bool {
+		solution.isFinished
+	}
 	
 	public static func == (lhs: ClientRequest, rhs: ClientRequest) -> Bool {
 		return lhs.name == rhs.name
