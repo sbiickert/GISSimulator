@@ -8,12 +8,12 @@
 import Foundation
 import GameplayKit
 
-public enum WorkflowType: String, CaseIterable {
+public enum WorkflowType: String, CaseIterable, Codable {
 	case User = "User"
 	case Transactional = "Transactional"
 }
 
-public struct Workflow: Described, Validatable, Equatable {
+public struct Workflow: Described, Validatable, Equatable, Codable {
 	public static func == (lhs: Workflow, rhs: Workflow) -> Bool {
 		return lhs.name == rhs.name && lhs.description == rhs.description && lhs.type == rhs.type
 	}
@@ -64,7 +64,9 @@ public struct Workflow: Described, Validatable, Equatable {
 		return (group, requests)
 	}
 	
-	var _random = GKRandomSource()
+	var _random: GKRandomSource {
+		GKRandomSource()
+	}
 	
 	public func calculateNextEventTime(clock: Int) -> Int {
 		// transactionRate is transactions per hour

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Service: Described, Hashable {
+public struct ServiceDef: Described, Hashable, Codable {
 	public var name: String
 	public var description: String
 	public var serviceType: String

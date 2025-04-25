@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum DataSourceType: String, CaseIterable {
+public enum DataSourceType: String, CaseIterable, Codable {
 	case Relational = "Relational"
 	case Object = "Object"
 	case File = "File"

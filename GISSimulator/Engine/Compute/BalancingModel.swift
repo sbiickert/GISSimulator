@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum BalancingModel: String, CaseIterable {
+public enum BalancingModel: String, CaseIterable, Codable {
 	case Single = "1"
 	case RoundRobin = "ROUNDROBIN"
 	case Failover = "FAILOVER"

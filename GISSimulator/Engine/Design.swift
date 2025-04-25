@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct Design: Described, Validatable {
+public struct Design: Described, Validatable, Codable {
 	public var name: String
 	public var description: String
 	public var zones: [Zone] = []
 	public var network: [Connection] = []
-	public var services: Dictionary<String, Service> = [:]
+	public var services: Dictionary<String, ServiceDef> = [:]
 	public var serviceProviders: [ServiceProvider] = []
 	public var workflows: [Workflow] = []
 	
@@ -198,11 +198,11 @@ public struct Design: Described, Validatable {
 	// MARK: - Service Management
 	//
 	
-	public mutating func add(service: Service) {
+	public mutating func add(service: ServiceDef) {
 		services[service.serviceType] = service
 	}
 	
-	public mutating func remove(service: Service) {
+	public mutating func remove(service: ServiceDef) {
 		services.removeValue(forKey: service.serviceType)
 		serviceProviders = serviceProviders.filter({$0.service != service})
 		updateWorkflowsWithNewServiceProviders()

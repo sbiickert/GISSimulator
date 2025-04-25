@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ThreadingModel: String, CaseIterable {
+public enum ThreadingModel: String, CaseIterable, Codable {
 	case Physical = "Physical"
 	case HyperThreaded = "HyperThreaded"
 	

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct WorkflowChain: Described, Validatable {
+public struct WorkflowChain: Described, Validatable, Codable {
 	public var name: String
 	public var description: String
 	public var steps: [WorkflowDefStep]

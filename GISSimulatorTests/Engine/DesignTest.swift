@@ -121,8 +121,8 @@ struct DesignTest {
 		d.add(computeNode: mobileClient)
 		
 		// Services
-		ServiceTest.sampleServiceTypes.forEach {
-			d.add(service: ServiceTest.sampleService(for: $0))
+		ServiceDefTest.sampleServiceTypes.forEach {
+			d.add(service: ServiceDefTest.sampleService(for: $0))
 		}
 		
 		// Service providers - Two sets. One local, one AGOL

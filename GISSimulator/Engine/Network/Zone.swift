@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Zone: Described, Equatable, Hashable {
+public struct Zone: Described, Equatable, Hashable, Codable {
 	public var name: String
 	public var description: String
 	public var zoneType: ZoneType

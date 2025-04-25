@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct ServiceProvider: Described, Validatable, Hashable {
+public struct ServiceProvider: Described, Validatable, Hashable, Codable {
 	public var name: String
 	public var description: String
-	public var service: Service
+	public var service: ServiceDef
 	public var nodes: [ComputeNode]
 
 	var _primary = 0
@@ -28,7 +28,7 @@ public struct ServiceProvider: Described, Validatable, Hashable {
 		}
 	}
 	
-	public init(name: String, description: String, service: Service, nodes: [ComputeNode], primaryIndex: Int = 0) {
+	public init(name: String, description: String, service: ServiceDef, nodes: [ComputeNode], primaryIndex: Int = 0) {
 		self.name = name
 		self.description = description
 		self.service = service

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct WorkflowDef: Described {
+public struct WorkflowDef: Described, Codable {
 	public var name: String
 	public var description: String
 	public var thinkTimeSeconds: Int

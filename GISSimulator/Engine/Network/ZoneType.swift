@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ZoneType: String, CaseIterable {
+public enum ZoneType: String, CaseIterable, Codable {
 	case Internet = "Internet"
 	case Edge = "Edge"
 	case Secured = "Secured"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct WorkflowDefStep: Described {
+public struct WorkflowDefStep: Described, Codable {
 	public var name: String
 	public var description: String
 	public var serviceType: String

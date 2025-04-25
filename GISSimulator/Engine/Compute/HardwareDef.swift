@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct HardwareDef: Equatable, Hashable {
+public struct HardwareDef: Equatable, Hashable, Codable {
 	private static var _baselinePerCore: Double = 10.0
 	public static var BaselinePerCore: Double {
 		get {

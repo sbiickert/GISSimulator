@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "updatedOn": "2024-04-04T16:14:04.00Z",
+  "baselineSPECPerCore": 5,
+  "steps": [
+    {
+      "name": "Client Service 001",
+      "desc": "Sample Pro Workflow Service",
+      "type": "pro",
+      "st": 831,
+      "chatter": 500,
+      "reqKB": 1000,
+      "respKB": 13340,
+      "ds": "DBMS",
+      "cache": 0
+    },
+    {
+      "name": "Client Service 002",
+      "desc": "Sample Web Browser Workflow Service",
+      "type": "browser",
+      "st": 20,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 2134,
+      "ds": "NONE",
+      "cache": 20
+    },
+    {
+      "name": "Client Service 003",
+      "desc": "Sample Mobile Workflow Service",
+      "type": "mobile",
+      "st": 20,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 1200,
+      "ds": "NONE",
+      "cache": 20
+    },
+    {
+      "name": "VDI Service 001",
+      "desc": "Sample VDI Workflow Service",
+      "type": "vdi",
+      "st": 831,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 3691,
+      "ds": "DBMS",
+      "cache": 0
+    },
+    {
+      "name": "Web Service 001",
+      "desc": "Sample Web Workflow Service",
+      "type": "web",
+      "st": 18,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 2134,
+      "ds": "NONE",
+      "cache": 0
+    },
+    {
+      "name": "Portal Service 001",
+      "desc": "Sample Portal Workflow Service",
+      "type": "portal",
+      "st": 19,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 2134,
+      "ds": "FILE",
+      "cache": 0
+    },
+    {
+      "name": "Map Service 001",
+      "desc": "Sample Map Workflow Service",
+      "type": "map",
+      "st": 141,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 2134,
+      "ds": "DBMS",
+      "cache": 0
+    },
+    {
+      "name": "Map Service 002",
+      "desc": "Sample Cached Map Workflow Service",
+      "type": "map",
+      "st": 1,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 2134,
+      "ds": "FILE",
+      "cache": 100
+    },
+    {
+      "name": "Hosted Service 001",
+      "desc": "Sample Hosted Workflow Service",
+      "type": "feature",
+      "st": 70,
+      "chatter": 10,
+      "reqKB": 100,
+      "respKB": 4000,
+      "ds": "RELATIONAL",
+      "cache": 0
+    },
+    {
+      "name": "DBMS Service 001",
+      "desc": "Sample DBMS Workflow Service",
+      "type": "dbms",
+      "st": 24,
+      "chatter": 500,
+      "reqKB": 1000,
+      "respKB": 13340,
+      "ds": "FILE",
+      "cache": 75
+    },
+    {
+      "name": "File Service 001",
+      "desc": "Sample File Workflow Service",
+      "type": "file",
+      "st": 24,
+      "chatter": 500,
+      "reqKB": 1000,
+      "respKB": 13340,
+      "ds": "FILE",
+      "cache": 0
+    },
+    {
+      "name": "Relational Service 001",
+      "desc": "Sample Relational DS Workflow Service",
+      "type": "relational",
+      "st": 24,
+      "chatter": 10,
+      "reqKB": 1000,
+      "respKB": 13340,
+      "ds": "FILE",
+      "cache": 0
+    }
+  ],
+  "chains": [
+    {"name": "Browser Web Hosted", "desc": "Working with hosted feature service",
+      "steps": [
+        "Client Service 002",
+        "Web Service 001",
+        "Portal Service 001",
+        "Hosted Service 001",
+        "Relational Service 001"
+      ]
+    },
+    {"name": "Mobile Web Hosted", "desc": "Working with hosted feature service",
+      "steps": [
+        "Client Service 003",
+        "Web Service 001",
+        "Portal Service 001",
+        "Hosted Service 001",
+        "Relational Service 001"
+      ]
+    },
+    {"name": "Pro Hosted", "desc": "Working with hosted feature service",
+      "steps": [
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Hosted Service 001",
+        "Relational Service 001"
+      ]
+    },
+    {"name": "VDI Pro Hosted", "desc": "Working with hosted feature service",
+      "steps": [
+        "VDI Service 001",
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Hosted Service 001",
+        "Relational Service 001"
+      ]
+    },
+    {"name": "Browser Basemap", "desc": "Basemap",
+      "steps": [
+        "Client Service 002",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 002",
+        "File Service 001"
+      ]
+    },
+    {"name": "Mobile Basemap", "desc": "Basemap",
+      "steps": [
+        "Client Service 003",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 002",
+        "File Service 001"
+      ]
+    },
+    {"name": "Pro Basemap", "desc": "Basemap",
+      "steps": [
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 002",
+        "File Service 001"
+      ]
+    },
+    {"name": "VDI Pro Basemap", "desc": "Basemap",
+      "steps": [
+        "VDI Service 001",
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 002",
+        "File Service 001"
+      ]
+    },
+    {"name": "Pro DC", "desc": "Pro Direct Connect",
+      "steps": [
+        "Client Service 001",
+        "DBMS Service 001"
+      ]
+    },
+    {"name": "VDI Pro DC", "desc": "Pro Direct Connect",
+      "steps": [
+        "VDI Service 001",
+        "Client Service 001",
+        "DBMS Service 001"
+      ]
+    },
+    {"name": "Pro Dynamic Map", "desc": "Dynamic Map Image Service",
+      "steps": [
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 001",
+        "DBMS Service 001"
+      ]
+    },
+    {"name": "VDI Pro Dynamic Map", "desc": "Dynamic Map Image Service",
+      "steps": [
+        "VDI Service 001",
+        "Client Service 001",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 001",
+        "DBMS Service 001"
+      ]
+    },
+    {"name": "Browser Dynamic Map", "desc": "Dynamic Map Image Service",
+      "steps": [
+        "Client Service 002",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 001",
+        "DBMS Service 001"
+      ]
+    },
+    {"name": "Mobile Dynamic Map", "desc": "Dynamic Map Image Service",
+      "steps": [
+        "Client Service 003",
+        "Web Service 001",
+        "Portal Service 001",
+        "Map Service 001",
+        "DBMS Service 001"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Simple Viewer Web App",
+      "desc": "Hosted Feature Service and Basemap",
+      "think": 5,
+      "chains": ["Browser Web Hosted", "Browser Basemap"]
+    },
+    {
+      "name": "Complex Viewer Web App",
+      "desc": "Hosted & Dynamic Services and Basemap",
+      "think": 5,
+      "chains": ["Browser Web Hosted", "Browser Web Hosted", "Browser Dynamic Map", "Browser Basemap"]
+    },
+    {
+      "name": "Pro Editing",
+      "desc": "DC, Dynamic Services and Basemap",
+      "think": 5,
+      "chains": ["Pro DC", "Pro Dynamic Map", "Pro Basemap"]
+    }
+  ]
+}

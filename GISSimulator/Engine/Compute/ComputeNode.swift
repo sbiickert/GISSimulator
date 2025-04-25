@@ -7,13 +7,13 @@
 
 import Foundation
 
-public enum ComputeNodeType: Equatable {
+public enum ComputeNodeType: Equatable, Codable {
 	case Client
 	case PhysicalServer
 	case VirtualServer(vCores: Int, memoryGB: Int)
 }
 
-public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable {
+public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {
 	public var name: String
 	public var description: String
 	public var hardwareDefinition: HardwareDef
