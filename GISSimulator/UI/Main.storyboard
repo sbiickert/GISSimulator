@@ -12,18 +12,92 @@
         <scene sceneID="CUv-cK-0nj">
             <objects>
                 <tableViewController id="LFr-dV-CVd" customClass="NetworkViewController" customModule="GISSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="sjI-Gx-d12">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="85" estimatedRowHeight="85" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="sjI-Gx-d12">
                         <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yCn-Bz-dF9">
-                                <rect key="frame" x="0.0" y="50" width="820" height="43.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="780" placeholderIntrinsicHeight="85" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" accessoryType="detailButton" indentationLevel="1" indentationWidth="10" reuseIdentifier="ZoneTableCell" rowHeight="85" id="yCn-Bz-dF9" customClass="ZoneTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                <rect key="frame" x="20" y="55.5" width="780" height="85"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yCn-Bz-dF9" id="3xi-qR-35l">
-                                    <rect key="frame" x="0.0" y="0.0" width="820" height="43.5"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" tableViewCell="yCn-Bz-dF9" id="3xi-qR-35l" customClass="ZoneTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="740" height="85"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Zone Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jzq-ze-3Qv">
+                                            <rect key="frame" x="88" y="11" width="632" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="AGOL" translatesAutoresizingMaskIntoConstraints="NO" id="N4j-nb-8Zk">
+                                            <rect key="frame" x="16" y="10.5" width="64" height="64"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bandwidth: 1000 Mbps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iXE-Lp-bUD">
+                                            <rect key="frame" x="88" y="42" width="289" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Connected to 2 Zone(s)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dV8-5j-ea7">
+                                            <rect key="frame" x="414" y="42" width="306" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemGreenColor"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="bandwidthLabel" destination="iXE-Lp-bUD" id="mVq-ZO-icC"/>
+                                    <outlet property="connectionsLabel" destination="dV8-5j-ea7" id="n2l-YR-4Cd"/>
+                                    <outlet property="iconImage" destination="N4j-nb-8Zk" id="unv-RP-k4Q"/>
+                                    <outlet property="nameLabel" destination="Jzq-ze-3Qv" id="7AH-yj-kfh"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="ConnectionTableCell" rowHeight="85" id="3Cd-77-irD" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                <rect key="frame" x="20" y="140.5" width="780" height="85"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Cd-77-irD" translatesAutoresizingMaskIntoConstraints="NO" id="dcu-xL-lec" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="740" height="85"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="GISGlobe" translatesAutoresizingMaskIntoConstraints="NO" id="5NM-Sa-Afq">
+                                            <rect key="frame" x="16" y="10.5" width="64" height="64"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Connection from A to B" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="heI-68-UM8">
+                                            <rect key="frame" x="88" y="16" width="209.5" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bandwidth: 1000 Mbps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvW-Wn-8xJ">
+                                            <rect key="frame" x="88" y="47" width="306" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Latency: 10 ms" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hD2-Ze-aWo">
+                                            <rect key="frame" x="464" y="47" width="256" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="bandwidthLabel" destination="IvW-Wn-8xJ" id="w7O-x2-D4Q"/>
+                                    <outlet property="iconImage" destination="5NM-Sa-Afq" id="BYl-DW-wTQ"/>
+                                    <outlet property="latencyLabel" destination="hD2-Ze-aWo" id="ib4-mg-lCy"/>
+                                    <outlet property="nameLabel" destination="heI-68-UM8" id="ZKW-Bk-6Fb"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -35,7 +109,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jw6-rF-Wh8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2098" y="-2361"/>
+            <point key="canvasLocation" x="2097.8048780487807" y="-2361.3559322033898"/>
         </scene>
         <!--Compute-->
         <scene sceneID="g3x-Bn-DDc">
@@ -163,8 +237,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AGOL" width="99.5" height="100"/>
+        <image name="GISGlobe" width="111" height="111.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
