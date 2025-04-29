@@ -11,14 +11,33 @@ import UIKit
 class NetworkViewController: UITableViewController {
 
 	private var document: Document? {
-		if let dvc = navigationController?.viewControllers.first(where: {$0 is DocumentViewController}) as? DocumentViewController {
-			return dvc.designDoc
-		}
-		return nil
+		VCUtil.getDocument(self)
 	}
 	
 	private var design: Design? {
-		return document?.data.design
+		VCUtil.getDesign(self)
+	}
+	
+	static func image(for zone: Zone) -> UIImage? {
+		switch zone.zoneType {
+		case .Secured:
+			return  UIImage(named: "Network")
+		case .Edge:
+			return  UIImage(named: "LoadBalancer")
+		case .Internet where zone.name == "AGOL":
+			return  UIImage(named: "AGOL")
+		case .Internet:
+			return UIImage(named: "CloudMono")
+		}
+	}
+	
+	static func image(for conn:Connection) -> UIImage? {
+		if conn.isLocal {
+			return UIImage(systemName: "point.3.filled.connected.trianglepath.dotted")
+		}
+		else {
+			return UIImage(systemName: "app.connected.to.app.below.fill")
+		}
 	}
 	
     override func viewDidLoad() {
@@ -73,17 +92,7 @@ class NetworkViewController: UITableViewController {
 		if let zoneCell = cell as? ZoneTableViewCell,
 		   let zone = design?.zones[indexPath.row]
 		{
-			switch zone.zoneType {
-			case .Secured:
-				zoneCell.iconImage.image = UIImage(named: "Network")
-			case .Edge:
-				zoneCell.iconImage.image = UIImage(named: "LoadBalancer")
-			case .Internet where zone.name == "AGOL":
-				zoneCell.iconImage.image = UIImage(named: "AGOL")
-			case .Internet:
-				zoneCell.iconImage.image = UIImage(named: "CloudMono")
-			}
-			
+			zoneCell.iconImage.image = NetworkViewController.image(for: zone)
 			zoneCell.nameLabel.text = "\(zone.name) - \(zone.description)"
 			if let local = zone.localConnection(in: design?.network ?? []) {
 				zoneCell.bandwidthLabel.text = "Bandwidth: \(local.bandwidthMbps) Mbps"
@@ -93,12 +102,7 @@ class NetworkViewController: UITableViewController {
 		}
 		else if let connCell = cell as? ConnectionTableViewCell,
 			let conn = design?.network[indexPath.row] {
-			if conn.isLocal {
-				connCell.iconImage.image = UIImage(systemName: "point.3.filled.connected.trianglepath.dotted")
-			}
-			else {
-				connCell.iconImage.image = UIImage(systemName: "app.connected.to.app.below.fill")
-			}
+			connCell.iconImage.image = NetworkViewController.image(for: conn)
 			connCell.nameLabel.text = conn.name
 			connCell.bandwidthLabel.text = "Bandwidth: \(conn.bandwidthMbps) Mbps"
 			connCell.latencyLabel.text = "Latency: \(conn.latencyMs) ms"
@@ -107,14 +111,7 @@ class NetworkViewController: UITableViewController {
 		cell.layoutIfNeeded()
         return cell
     }
-//	
-//	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//		if indexPath.row == self.tableView(tableView, numberOfRowsInSection: indexPath.section) {
-//			return 44
-//		}
-//		return 85
-//	}
-	
+
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		switch section {
 		case 0:
@@ -123,51 +120,48 @@ class NetworkViewController: UITableViewController {
 			return "Connections"
 		}
 	}
+	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 0,
+			let design = design {
+			let zone = design.zones[indexPath.row]
+
+			for i in 0..<design.zones.count {
+				if indexPath.row != i {
+					tableView.deselectRow(at: IndexPath(row: i, section: 0), animated: false)
+				}
+			}
+			
+			// Highlight the connection rows corresponding to the selected zone
+			// Clear any connections not related to zone
+			for i in 0..<design.network.count {
+				if design.network[i].source == zone || design.network[i].destination == zone {
+					tableView.selectRow(at: IndexPath(row: i, section: 1), animated: true, scrollPosition: .none)
+				}
+				else {
+					tableView.deselectRow(at: IndexPath(row: i, section: 1), animated: false)
+				}
+			}
+		}
+	}
+
     
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+		// Get the new view controller using segue.destination.
+		if let zoneDetailVC = segue.destination as? ZoneDetailViewController,
+			let cell = sender as? UITableViewCell,
+			let design = design
+		{
+			// Pass the selected object to the new view controller.
+			let zone = design.zones[tableView.indexPath(for: cell)!.row]
+			zoneDetailVC.design = design
+			zoneDetailVC.zone = zone
+		}
     }
-    */
+    
+	
 
 }
