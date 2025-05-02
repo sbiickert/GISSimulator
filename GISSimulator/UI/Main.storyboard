@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -34,6 +33,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
+                                                    <action selector="nameChanged:" destination="06u-HM-pH6" eventType="editingChanged" id="Wp6-dK-C39"/>
                                                     <outlet property="delegate" destination="06u-HM-pH6" id="Mbm-Hu-Thu"/>
                                                 </connections>
                                             </textField>
@@ -56,6 +56,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
+                                                    <action selector="descriptionChanged:" destination="06u-HM-pH6" eventType="editingChanged" id="RAc-Sb-BoL"/>
                                                     <outlet property="delegate" destination="06u-HM-pH6" id="Kmh-UX-Efg"/>
                                                 </connections>
                                             </textField>
@@ -77,17 +78,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nix-gj-Zq1">
                                                 <rect key="frame" x="97.5" y="0.0" width="442.5" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <menu key="menu" id="jTX-Np-8V8">
-                                                    <children>
-                                                        <command title="Secured" id="HEW-C7-euV"/>
-                                                        <command title="Edge" id="SFN-j6-QRc"/>
-                                                        <command title="Internet" id="lfP-b7-Qlp" userLabel="Internet"/>
-                                                    </children>
-                                                </menu>
                                                 <state key="normal" title="Button"/>
-                                                <connections>
-                                                    <action selector="typeButtonClicked:" destination="06u-HM-pH6" eventType="touchUpInside" id="Ua8-M0-t7m"/>
-                                                </connections>
                                             </button>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="fd3-ot-FGz"/>
@@ -108,21 +99,14 @@
                                                 <rect key="frame" x="97.5" y="0.0" width="364.5" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="bandwidthChanged:" destination="06u-HM-pH6" eventType="editingChanged" id="2pu-qA-d9G"/>
+                                                    <outlet property="delegate" destination="06u-HM-pH6" id="fpa-tT-aIx"/>
+                                                </connections>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tgo-i4-Ch1">
                                                 <rect key="frame" x="472" y="0.0" width="68" height="30"/>
-                                                <menu key="menu" id="GZs-GH-Vyf">
-                                                    <children>
-                                                        <command title="100 Mbps" id="UX2-sT-b1j"/>
-                                                        <command title="1 Gbps" id="nNo-kF-Jjp"/>
-                                                        <command title="2.5 Gbps" id="spU-Bn-kCU"/>
-                                                        <command title="10 Gbps" id="18R-oG-xiG"/>
-                                                    </children>
-                                                </menu>
                                                 <state key="normal" title="Quick List"/>
-                                                <connections>
-                                                    <action selector="bandwidthButtonClicked:" destination="06u-HM-pH6" eventType="touchUpInside" id="ujB-Yg-KFh"/>
-                                                </connections>
                                             </button>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="X8T-DG-V6L"/>
@@ -140,16 +124,14 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="in milliseconds" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X6w-OX-sDj">
-                                                <rect key="frame" x="97.5" y="0.0" width="338.5" height="30"/>
+                                                <rect key="frame" x="97.5" y="0.0" width="442.5" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
-                                            </textField>
-                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="JcX-RG-DOS">
-                                                <rect key="frame" x="446" y="0.0" width="94" height="30"/>
                                                 <connections>
-                                                    <action selector="latencyStepperChanged:" destination="06u-HM-pH6" eventType="valueChanged" id="HvL-YZ-1vO"/>
+                                                    <action selector="latencyChanged:" destination="06u-HM-pH6" eventType="editingChanged" id="0U8-j5-XcQ"/>
+                                                    <outlet property="delegate" destination="06u-HM-pH6" id="aUV-cX-x87"/>
                                                 </connections>
-                                            </stepper>
+                                            </textField>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="qb4-JR-Rlw"/>
                                         <constraints>
@@ -232,7 +214,6 @@
                         <outlet property="bandwidthTextField" destination="URP-W7-jZx" id="qjH-BO-tb9"/>
                         <outlet property="deleteButton" destination="6El-eH-YLd" id="2Wn-KY-4qz"/>
                         <outlet property="descriptionTextField" destination="htN-0y-sW4" id="bN5-Ev-6KF"/>
-                        <outlet property="latencyStepper" destination="JcX-RG-DOS" id="TyE-W3-Hmw"/>
                         <outlet property="latencyTextField" destination="X6w-OX-sDj" id="sjQ-Bc-ocM"/>
                         <outlet property="nameTextField" destination="OLk-SD-NRf" id="2cL-nS-yAR"/>
                         <outlet property="tableview" destination="uik-kf-ywJ" id="7vn-lz-iLy"/>
