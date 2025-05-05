@@ -8,6 +8,10 @@
 import Foundation
 
 public struct Connection: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {
+	public static func == (lhs: Connection, rhs: Connection) -> Bool {
+		lhs.source == rhs.source && lhs.destination == rhs.destination
+	}
+	
 	public var name: String {
 		get {
 			"\(source.name) to \(destination.name)"
@@ -22,25 +26,23 @@ public struct Connection: Described, ServiceTimeCalculator, QueueProvider, Equat
 		set {}
 	}
 	
+	public var source: Zone
+	public var destination: Zone
+	public var bandwidthMbps: Int
+	public var latencyMs: Int
+	
 	var isLocal:Bool {
 		source == destination
 	}
 	
 	func invert() -> Connection {
-		var copy = self
-		copy.source = destination
-		copy.destination = source
+		let copy = Connection(source: destination, destination: source, bandwidthMbps: bandwidthMbps, latencyMs: latencyMs)
 		return copy
 	}
 	
 	public func provideQueue() -> MultiQueue {
 		MultiQueue(serviceTimeCalculator: self, waitMode: .Transmitting, channelCount: 2)
 	}
-	
-	public var source: Zone
-	public var destination: Zone
-	public var bandwidthMbps: Int
-	public var latencyMs: Int
 	
 	public func calculateServiceTime(for request: ClientRequest) -> Int? {
 		guard request.solution.currentStep != nil else { return nil }

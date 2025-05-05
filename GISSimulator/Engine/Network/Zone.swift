@@ -8,9 +8,21 @@
 import Foundation
 
 public struct Zone: Described, Equatable, Hashable, Codable {
+	public static func == (lhs: Zone, rhs: Zone) -> Bool {
+		lhs.id == rhs.id
+	}
+	
+	public let id: UUID = UUID()
 	public var name: String
 	public var description: String
 	public var zoneType: ZoneType
+	
+	// Excludes ID so it won't be encoded/decoded
+	private enum CodingKeys : String, CodingKey {
+		case name
+		case description
+		case zoneType
+	}
 	
 	public func connect(to other: Zone, bandwidthMbps: Int, latencyMs: Int) -> Connection {
 		Connection(source: self, destination: other, bandwidthMbps: bandwidthMbps, latencyMs: latencyMs)

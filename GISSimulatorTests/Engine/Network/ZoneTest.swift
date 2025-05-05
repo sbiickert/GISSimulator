@@ -18,6 +18,20 @@ struct ZoneTest {
 		#expect(internet.zoneType == .Internet)
     }
 	
+	@Test func editZone() async throws {
+		var dmz = ZoneTest.sampleEdgeZone
+		let network = RouteTest.sampleNetwork
+		var local = dmz.localConnection(in: network)
+		#expect(local != nil)
+		local?.bandwidthMbps = 789
+		#expect(dmz.localConnection(in: network)?.bandwidthMbps == 1000)
+		// Editing the name breaks equality-by-value of the zone
+		dmz.name = "New Name"
+		#expect(dmz.localConnection(in: network) != nil)
+		#expect(dmz.connections(in: network).count == 5)
+		#expect(local?.source == dmz)
+	}
+	
 	static let sampleInternetZone: Zone = Zone(
 		name: "Internet",
 		description: "The internet zone.",
