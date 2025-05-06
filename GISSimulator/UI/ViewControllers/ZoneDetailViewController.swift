@@ -47,8 +47,15 @@ class ZoneDetailViewController: UIViewController,
 	
 	@IBOutlet weak var deleteButton: UIButton!
 	@IBAction func deleteButtonClicked(_ sender: UIButton) {
-		deletedZone = true
-		performSegue(withIdentifier: "deleteZoneSegue", sender: self)
+		let alertController = UIAlertController(title: "Delete Zone", message: "Are you sure you want to delete this zone? All its connections and compute nodes will be deleted.", preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "OK", style: .default) { [self] (action) in
+			deletedZone = true
+			performSegue(withIdentifier: "deleteZoneSegue", sender: self)
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in }
+		alertController.addAction(okAction)
+		alertController.addAction(cancelAction)
+		present(alertController, animated: true)
 	}
 	
 	var design: Design? = nil
