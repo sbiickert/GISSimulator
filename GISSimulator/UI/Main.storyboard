@@ -218,9 +218,11 @@
                         <outlet property="nameTextField" destination="OLk-SD-NRf" id="2cL-nS-yAR"/>
                         <outlet property="tableview" destination="uik-kf-ywJ" id="7vn-lz-iLy"/>
                         <outlet property="typeMenuButton" destination="nix-gj-Zq1" id="xC9-Xt-gzZ"/>
+                        <segue destination="0fl-Qy-g23" kind="unwind" identifier="deleteZoneSegue" unwindAction="unwindToNetworkViewController:" id="l4N-Kh-bbG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BeY-5a-5XE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="0fl-Qy-g23" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2449.0243902439024" y="-2997.4576271186443"/>
         </scene>

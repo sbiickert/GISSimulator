@@ -164,27 +164,39 @@ class NetworkViewController: UITableViewController,
 		}
     }
  
+	@IBAction func unwindToNetworkViewController(_ segue: UIStoryboardSegue) {
+		if let zoneDetailVC = segue.source as? ZoneDetailViewController {
+			handleZoneDetailDismissal(zoneDetailVC)
+		}
+	}
+	
 	func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
 		if let zoneDetailVC = presentationController.presentedViewController as? ZoneDetailViewController {
-			print("Dismissed zone detail")
-			
-			let zone = zoneDetailVC.zone
-			if let design = design,
-			   let originalZone = design.zones.first(where: { $0 === zone }),
-			   let local = zoneDetailVC.localConnection,
-			   let originalLocal = originalZone.localConnection(in: design.network),
-			   let document = document {
-				
-				document.data.design.replace(connection: local)
-				document.data.design.replace(zone: zone)
-				document.undoManager?.registerUndo(withTarget: document) {
-					$0.data.design.replace(connection: originalLocal)
-					$0.data.design.replace(zone: originalZone)
-				}
-			}
-			
-			tableView.reloadData()
+			handleZoneDetailDismissal(zoneDetailVC)
 		}
+	}
+	
+	private func handleZoneDetailDismissal(_ zoneDetailVC: ZoneDetailViewController) {
+		let zone = zoneDetailVC.zone
+		if zoneDetailVC.deletedZone,
+			let design = design,
+			let document = document {
+			document.data.design.remove(zone: zone)
+			document.undoManager?.registerUndo(withTarget: document) {
+				$0.data.design = design
+			}
+		}
+		if let design = design,
+		   let local = zoneDetailVC.localConnection,
+		   let document = document {
+			document.data.design.replace(connection: local)
+			document.data.design.replace(zone: zone)
+			document.undoManager?.registerUndo(withTarget: document) {
+				$0.data.design = design
+			}
+		}
+		
+		tableView.reloadData()
 	}
 
 }

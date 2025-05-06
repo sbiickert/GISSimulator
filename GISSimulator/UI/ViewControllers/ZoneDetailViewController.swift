@@ -47,6 +47,8 @@ class ZoneDetailViewController: UIViewController,
 	
 	@IBOutlet weak var deleteButton: UIButton!
 	@IBAction func deleteButtonClicked(_ sender: UIButton) {
+		deletedZone = true
+		performSegue(withIdentifier: "deleteZoneSegue", sender: self)
 	}
 	
 	var design: Design? = nil
@@ -56,6 +58,8 @@ class ZoneDetailViewController: UIViewController,
 			updateUI()
 		}
 	}
+	
+	var deletedZone: Bool = false
 	
 	private func updateUI() {
 		guard design != nil, nameTextField != nil else { return }
