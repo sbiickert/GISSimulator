@@ -66,6 +66,28 @@ struct DesignTest {
 		#expect(d.isValid)
 	}
 	
+	@Test func editZone() async throws {
+		var d = DesignTest.sampleDesign
+		var editZone = d.getZone(named: "Intranet")
+		var local = editZone?.localConnection(in: d.network)
+		#expect(editZone != nil)
+		#expect(local != nil)
+		editZone!.name = "Home Base"
+		local!.bandwidthMbps = 789
+		local!.latencyMs = 123
+		
+		d.replace(connection: local!)
+		d.replace(zone: editZone!)
+		
+		#expect(d.getZone(named: "Intranet") == nil)
+		
+		let updatedConns = d.network.filter { $0.source.name == "Home Base" || $0.destination.name == "Home Base"}
+		#expect(updatedConns.count == 3)
+		
+		let updatedNodes = d.computeNodes.filter { $0.zone.name == "Home Base" }
+		#expect(updatedNodes.count == 5) // One physical server, 3 VMs, 1 client
+	}
+	
 	private func printDesignValidationMessages(_ d: Design) {
 		print("Validation errors:")
 		d.validate().forEach { print($0) }

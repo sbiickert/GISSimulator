@@ -76,7 +76,7 @@ class ZoneDetailViewController: UIViewController,
 	}
 	
 	private var _localConnection: Connection? = nil
-	private var localConnection: Connection? {
+	var localConnection: Connection? {
 		get {
 			guard let design = design else { return nil }
 			if _localConnection == nil {
@@ -89,15 +89,11 @@ class ZoneDetailViewController: UIViewController,
 		}
 	}
 	
-	private var _connections: [Connection] = []
 	private var connections: [Connection] {
 		guard let design = design else { return [] }
-		if _connections.count == 0 {
-			_connections = zone.connections(in: design.network)
-				.sorted { $0.name < $1.name }
-				.filter { $0.isLocal == false }
-		}
-		return _connections
+		return zone.connections(in: design.network)
+			.sorted { $0.name < $1.name }
+			.filter { $0.isLocal == false }
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -142,8 +138,8 @@ class ZoneDetailViewController: UIViewController,
 		bandwidthMenuButton.menu = UIMenu(children: bandwidthOptions)
 		
 		updateUI()
+		
     }
-    
 
     /*
     // MARK: - Navigation

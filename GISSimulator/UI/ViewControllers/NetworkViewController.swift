@@ -8,7 +8,8 @@
 import UIKit
 
 
-class NetworkViewController: UITableViewController {
+class NetworkViewController: UITableViewController,
+							 UIAdaptivePresentationControllerDelegate {
 
 	private var document: Document? {
 		VCUtil.getDocument(self)
@@ -159,9 +160,31 @@ class NetworkViewController: UITableViewController {
 			let zone = design.zones[tableView.indexPath(for: cell)!.row]
 			zoneDetailVC.design = design
 			zoneDetailVC.zone = zone
+			segue.destination.presentationController?.delegate = self
 		}
     }
-    
-	
+ 
+	func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+		if let zoneDetailVC = presentationController.presentedViewController as? ZoneDetailViewController {
+			print("Dismissed zone detail")
+			
+			let zone = zoneDetailVC.zone
+			if let design = design,
+			   let originalZone = design.zones.first(where: { $0 === zone }),
+			   let local = zoneDetailVC.localConnection,
+			   let originalLocal = originalZone.localConnection(in: design.network),
+			   let document = document {
+				
+				document.data.design.replace(connection: local)
+				document.data.design.replace(zone: zone)
+				document.undoManager?.registerUndo(withTarget: document) {
+					$0.data.design.replace(connection: originalLocal)
+					$0.data.design.replace(zone: originalZone)
+				}
+			}
+			
+			tableView.reloadData()
+		}
+	}
 
 }

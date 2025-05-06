@@ -114,6 +114,29 @@ public struct Design: Described, Validatable, Codable {
 	}
 	
 	/**
+	 * Replaces an existing zone with the same identity but different value. Follow on effects:
+	 * - Updates all connections where the old zone was a source or destination
+	 * - Updates all compute nodes in the old zone
+	 * - Updates all service providers with the new compute nodes
+	 * - Updates any workflows that are impacted by the change in service providers
+	 * @param zone
+	 */
+	public mutating func replace(zone: Zone) {
+		guard let currentZone = zones.first(where: { $0 === zone }) else { return }
+		guard currentZone != zone else { return } // Zones are equal, no need to do work
+		
+		zones = zones.filter({$0 !== zone}) + [zone]
+		network = network.map {
+			return $0.replacingSourceOrDestination(with: zone)
+		}
+		computeNodes = computeNodes.map {
+			return $0.replacingZone(with: zone)
+		}
+		updateServiceProvidersWithNewComputeNodes()
+		updateWorkflowsWithNewServiceProviders()
+	}
+	
+	/**
 	 * Removes zone from the Design. Follow on effects:
 	 * - Removes any connections running to/from the zone
 	 * - Removes any compute nodes in the zone
@@ -122,15 +145,16 @@ public struct Design: Described, Validatable, Codable {
 	 * @param zone
 	 */
 	public mutating func remove(zone: Zone) {
-		zones = zones.filter({$0 != zone})
-		network = network.filter({$0.destination != zone && $0.source != zone})
-		computeNodes = computeNodes.filter({$0.zone != zone})
+		zones = zones.filter({$0 !== zone})
+		network = zone.otherConnections(in: network)
+		computeNodes = computeNodes.filter({$0.zone !== zone})
 		updateServiceProvidersWithNewComputeNodes()
 		updateWorkflowsWithNewServiceProviders()
 	}
 	
 	public func getZone(named name: String) -> Zone? {
-		return zones.first(where: { $0.name == name })
+		let z = zones.first(where: { $0.name == name })
+		return z
 	}
 	
 	//
@@ -150,6 +174,17 @@ public struct Design: Described, Validatable, Codable {
 			}
 		}
 		network = updatedNetwork
+	}
+	
+	/**
+	 * Replaces an existing zone with the same identity but different value.
+	 */
+	public mutating func replace(connection replacement: Connection) {
+		guard let currentConn = network.first(where: { $0 === replacement }) else { return }
+		guard currentConn != replacement else { return } // Connections are equal, no need to do work
+		network = network.map {
+			return $0 === currentConn ? replacement : $0
+		}
 	}
 	
 	/** Removes a connection. Only alters the Design. */

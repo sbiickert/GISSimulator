@@ -14,13 +14,30 @@ public enum ComputeNodeType: Equatable, Codable {
 }
 
 public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {
+	public var id: UUID = UUID()
 	public var name: String
 	public var description: String
 	public var hardwareDefinition: HardwareDef
-	public var zone: Zone
+	public var zone: Zone {
+		didSet {
+			if type == .PhysicalServer {
+				virtualHosts = virtualHosts.map {
+					return $0.replacingZone(with: zone)
+				}
+			}
+		}
+	}
 	public var type: ComputeNodeType
 	public var virtualHosts: [ComputeNode] = []
-
+	
+	func replacingZone(with zone:Zone) -> ComputeNode {
+		var copy = self
+		if self.zone === zone {
+			copy.zone = zone
+		}
+		return copy
+	}
+	
 	public var vCoreCount: Int? {
 		switch type {
 		case .VirtualServer(vCores: let vCores, memoryGB: _):

@@ -8,10 +8,13 @@
 import Foundation
 
 public struct Connection: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {
-	public static func == (lhs: Connection, rhs: Connection) -> Bool {
-		lhs.source == rhs.source && lhs.destination == rhs.destination
+	public static func === (lhs: Connection, rhs: Connection) -> Bool {
+		lhs.source === rhs.source && lhs.destination === rhs.destination
 	}
-	
+	public static func !== (lhs: Connection, rhs: Connection) -> Bool {
+		lhs.source !== rhs.source || lhs.destination !== rhs.destination
+	}
+
 	public var name: String {
 		get {
 			"\(source.name) to \(destination.name)"
@@ -37,6 +40,17 @@ public struct Connection: Described, ServiceTimeCalculator, QueueProvider, Equat
 	
 	func invert() -> Connection {
 		let copy = Connection(source: destination, destination: source, bandwidthMbps: bandwidthMbps, latencyMs: latencyMs)
+		return copy
+	}
+	
+	func replacingSourceOrDestination(with zone: Zone) -> Connection {
+		var copy = self
+		if source === zone {
+			copy.source = zone
+		}
+		if destination === zone {
+			copy.destination = zone
+		}
 		return copy
 	}
 	

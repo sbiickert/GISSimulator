@@ -8,22 +8,18 @@
 import Foundation
 
 public struct Zone: Described, Equatable, Hashable, Codable {
-	public static func == (lhs: Zone, rhs: Zone) -> Bool {
-		lhs.id == rhs.id
+	public static func === (lhs: Zone, rhs: Zone?) -> Bool {
+		lhs.id == rhs?.id
 	}
-	
-	public let id: UUID = UUID()
+	public static func !== (lhs: Zone, rhs: Zone?) -> Bool {
+		lhs.id != rhs?.id
+	}
+
+	public var id: UUID = UUID()
 	public var name: String
 	public var description: String
 	public var zoneType: ZoneType
-	
-	// Excludes ID so it won't be encoded/decoded
-	private enum CodingKeys : String, CodingKey {
-		case name
-		case description
-		case zoneType
-	}
-	
+		
 	public func connect(to other: Zone, bandwidthMbps: Int, latencyMs: Int) -> Connection {
 		Connection(source: self, destination: other, bandwidthMbps: bandwidthMbps, latencyMs: latencyMs)
 	}
@@ -33,7 +29,7 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 	}
 	
 	func connections(in network: [Connection]) -> [Connection] {
-		return network.filter({$0.source == self || $0.destination == self})
+		return network.filter({$0.source === self || $0.destination === self})
 	}
 	
 	func localConnection(in network: [Connection]) -> Connection? {
@@ -42,11 +38,15 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 	}
 	
 	func exitConnections(in network: [Connection]) -> [Connection] {
-		return network.filter({$0.source == self && $0.destination != self})
+		return network.filter({$0.source === self && $0.destination !== self})
 	}
 	
 	func entryConnections(in network: [Connection]) -> [Connection] {
-		return network.filter({$0.source != self && $0.destination == self})
+		return network.filter({$0.source !== self && $0.destination === self})
+	}
+	
+	func otherConnections(in network: [Connection]) -> [Connection] {
+		return network.filter({$0.source !== self && $0.destination !== self})
 	}
 	
 	func isFullyConnected(in network: [Connection]) -> Bool {
@@ -57,19 +57,19 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 	
 	func clients(in computeNodes: [ComputeNode]) -> [ComputeNode] {
 		return computeNodes.filter({$0.type == .Client})
-			.filter({$0.zone == self})
+			.filter({$0.zone === self})
 	}
 	
 	func servers(in computeNodes: [ComputeNode]) -> [ComputeNode] {
 		let hosts = computeNodes.filter({$0.type != .Client})
-		return hosts.filter({$0.zone == self})
+		return hosts.filter({$0.zone === self})
 	}
 	
 	func workflows(in wfList: [Workflow]) -> [Workflow] {
 		wfList.filter({
 			let clientNodes = $0.defaultServiceProviders.flatMap({$0.nodes})
 				.filter({$0.type == .Client})
-			return (clientNodes.first?.zone ?? nil) == self
+			return self === clientNodes.first?.zone
 		})
 	}
 }

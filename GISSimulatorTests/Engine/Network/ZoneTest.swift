@@ -23,13 +23,20 @@ struct ZoneTest {
 		let network = RouteTest.sampleNetwork
 		var local = dmz.localConnection(in: network)
 		#expect(local != nil)
+		// Connection identity is defined by the identity of the zones on either end
+		// Connection equality is by value
 		local?.bandwidthMbps = 789
-		#expect(dmz.localConnection(in: network)?.bandwidthMbps == 1000)
-		// Editing the name breaks equality-by-value of the zone
+		#expect(dmz.localConnection(in: network)! != local!)
+		#expect(dmz.localConnection(in: network)! === local!)
+		// Zone identity is based on id
+		// Zone equality is by value
 		dmz.name = "New Name"
-		#expect(dmz.localConnection(in: network) != nil)
+		#expect(ZoneTest.sampleEdgeZone === dmz)
+		#expect(dmz.localConnection(in: network) != nil) // Identity
+		#expect(ZoneTest.sampleEdgeZone != dmz)
 		#expect(dmz.connections(in: network).count == 5)
-		#expect(local?.source == dmz)
+		#expect(local!.source === dmz)
+		#expect(local!.source != dmz)
 	}
 	
 	static let sampleInternetZone: Zone = Zone(
