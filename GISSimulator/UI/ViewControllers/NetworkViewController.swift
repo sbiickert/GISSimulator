@@ -122,6 +122,27 @@ class NetworkViewController: UITableViewController,
 		}
 	}
 	
+	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		let button: UIButton
+		if section == 0 {
+			let action = UIAction(title: "Add Zone", image: UIImage(systemName: "plus.app")) { _ in
+				print("Add zone!")
+			}
+			button = UIButton(primaryAction: action)
+		}
+		else {
+			let action = UIAction(title: "Add Connection", image: UIImage(systemName: "plus.app.fill")) { _ in
+				print("Add connection!")
+			}
+			button = UIButton(primaryAction: action)
+		}
+		return button
+	}
+	
+	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return 60
+	}
+	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0,
 			let design = design {
