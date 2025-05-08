@@ -100,6 +100,13 @@ class ZoneDetailViewController: UIViewController,
 		}
 	}
 	
+	private var computeNodes: [ComputeNode] {
+		guard let design = design else { return [] }
+		let nodes = design.computeNodes.filter { $0.zone === zone }
+			.sorted { $0.name < $1.name }
+		return nodes
+	}
+	
 	private var connections: [Connection] {
 		guard let design = design else { return [] }
 		return zone.connections(in: design.network)
@@ -107,19 +114,70 @@ class ZoneDetailViewController: UIViewController,
 			.filter { $0.isLocal == false }
 	}
 	
+	private var otherZones: [Zone] {
+		guard let design = design else { return [] }
+		return design.zones.filter { $0 !== zone }
+			.sorted { $0.name < $1.name }
+	}
+	
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 2
+	}
+	
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == 0 {
+			return "Connections to Other Zones"
+		}
+		return "Compute Resources"
+	}
+	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return connections.count
+		if section == 0 {
+			return otherZones.count
+		}
+		return computeNodes.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ZoneConnectionCell", for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "ZoneDetailCell", for: indexPath)
+		guard let design = design else { return cell }
 
-		let conn = connections[indexPath.row]
-		var config = cell.defaultContentConfiguration()
-		config.text = conn.name
-		config.secondaryText = conn.description
-		config.image = NetworkViewController.image(for: conn)
-		cell.contentConfiguration = config
+		if indexPath.section == 0 {
+			// Other zones
+			let otherZone = otherZones[indexPath.row]
+			var config = cell.defaultContentConfiguration()
+			config.text = otherZone.name
+			config.secondaryText = otherZone.description
+			switch zone.connectionStatus(to: otherZone, in: design.network) {
+			case .None:
+				config.image = UIImage(systemName: "circle.slash")
+			case .ExitOnly:
+				config.image = UIImage(systemName: "arrow.up")
+			case .EnterOnly:
+				config.image = UIImage(systemName: "arrow.down")
+			case .Both:
+				config.image = UIImage(systemName: "arrow.up.arrow.down")
+			}
+			cell.contentConfiguration = config
+
+		}
+		else {
+			// Compute nodes
+			let node = computeNodes[indexPath.row]
+			var config = cell.defaultContentConfiguration()
+			config.text = node.name
+			config.secondaryText = node.description
+			switch node.type {
+			case .VirtualServer:
+				config.image = UIImage(systemName: "cloud")
+			case .PhysicalServer:
+				config.image = UIImage(systemName: "xserve")
+			case .Client:
+				config.image = UIImage(systemName: "laptopcomputer")
+			}
+			cell.contentConfiguration = config
+		}
+
 		
 		return cell
 	}

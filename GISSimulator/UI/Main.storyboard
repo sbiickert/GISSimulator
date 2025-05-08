@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-YU-BDL" userLabel="Vertical Stack View">
-                                <rect key="frame" x="20" y="20" width="540" height="600"/>
+                                <rect key="frame" x="20" y="76" width="540" height="544"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FUk-9P-MuM" userLabel="Row Stack View">
                                         <rect key="frame" x="0.0" y="0.0" width="540" height="30"/>
@@ -139,10 +139,10 @@
                                         </constraints>
                                     </stackView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="uik-kf-ywJ">
-                                        <rect key="frame" x="0.0" y="200" width="540" height="360"/>
+                                        <rect key="frame" x="0.0" y="200" width="540" height="304"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ZoneConnectionCell" textLabel="9He-0X-7Cd" detailTextLabel="AN2-kx-Oe4" style="IBUITableViewCellStyleSubtitle" id="Mo8-Ge-fmv">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ZoneDetailCell" textLabel="9He-0X-7Cd" detailTextLabel="AN2-kx-Oe4" style="IBUITableViewCellStyleSubtitle" id="Mo8-Ge-fmv">
                                                 <rect key="frame" x="0.0" y="50" width="540" height="43.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Mo8-Ge-fmv" id="Tdz-3m-wiS">
@@ -173,7 +173,7 @@
                                         </connections>
                                     </tableView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IXo-hB-ymr">
-                                        <rect key="frame" x="0.0" y="570" width="540" height="30"/>
+                                        <rect key="frame" x="0.0" y="514" width="540" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6El-eH-YLd">
                                                 <rect key="frame" x="0.0" y="0.0" width="540" height="30"/>
@@ -209,6 +209,7 @@
                             <constraint firstItem="eVO-YU-BDL" firstAttribute="top" secondItem="5ia-ju-z7C" secondAttribute="top" constant="20" id="zgp-VX-AQD"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="mak-Ar-NGo"/>
                     <connections>
                         <outlet property="bandwidthMenuButton" destination="tgo-i4-Ch1" id="PP7-Vu-1SL"/>
                         <outlet property="bandwidthTextField" destination="URP-W7-jZx" id="qjH-BO-tb9"/>
@@ -224,7 +225,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BeY-5a-5XE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="0fl-Qy-g23" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2449.0243902439024" y="-2997.4576271186443"/>
+            <point key="canvasLocation" x="3205.6097560975609" y="-2997.4576271186443"/>
         </scene>
         <!--Network-->
         <scene sceneID="CUv-cK-0nj">
@@ -274,7 +275,7 @@
                                     <outlet property="connectionsLabel" destination="dV8-5j-ea7" id="n2l-YR-4Cd"/>
                                     <outlet property="iconImage" destination="N4j-nb-8Zk" id="unv-RP-k4Q"/>
                                     <outlet property="nameLabel" destination="Jzq-ze-3Qv" id="7AH-yj-kfh"/>
-                                    <segue destination="06u-HM-pH6" kind="presentation" trigger="accessoryAction" id="ELX-fl-YwU"/>
+                                    <segue destination="M3J-ac-7LI" kind="presentation" trigger="accessoryAction" id="ELX-fl-YwU"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="ConnectionTableCell" rowHeight="85" id="3Cd-77-irD" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
@@ -483,6 +484,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XVv-D0-KfN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2589" y="-1516"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="1dV-NM-ZsR">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="M3J-ac-7LI" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" hidden="YES" contentMode="scaleToFill" id="yT6-yG-JJO">
+                        <rect key="frame" x="0.0" y="0.0" width="580" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="06u-HM-pH6" kind="relationship" relationship="rootViewController" id="tmR-GG-35x"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l69-JC-aTC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2449.0243902439024" y="-2997.4576271186443"/>
         </scene>
     </scenes>
     <resources>

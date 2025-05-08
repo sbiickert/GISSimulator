@@ -31,6 +31,41 @@ class Document: UIDocument {
 					_design!.add(connection: Connection(source: intranet, destination: dmz, bandwidthMbps: 1000, latencyMs: 0), addReciprocalConnection: true)
 					_design!.add(connection: Connection(source: dmz, destination: internet, bandwidthMbps: 500, latencyMs: 10), addReciprocalConnection: true)
 					_design!.add(connection: Connection(source: internet, destination: agol, bandwidthMbps: 1000, latencyMs: 10), addReciprocalConnection: true)
+					
+					// Physical servers
+					let hwLib = DefLibManager.hardwareDefLib
+					let serverHWDef = hwLib.hardware["Xeon Gold 6154 [36]"]!
+					var localHost = ComputeNode(name: "SRV01", description: "Local Server",
+												hardwareDefinition: serverHWDef,
+												zone: intranet, type: .PhysicalServer)
+					let agolHost = ComputeNode(name: "AGOL01", description: "AWS Server",
+											   hardwareDefinition: serverHWDef,
+											   zone: agol, type: .PhysicalServer)
+					
+					// Virtual servers
+					localHost.addVirtualHost(name: "VWEB01", vCores: 4, memoryGB: 16)
+					localHost.addVirtualHost(name: "VGIS01", vCores: 8, memoryGB: 32)
+					localHost.addVirtualHost(name: "VDB01", vCores: 4, memoryGB: 16)
+					
+					_design!.add(computeNode: localHost)
+					_design!.add(computeNode: agolHost)
+
+					// Clients
+					let clientHWDef = hwLib.hardware["Intel Core i7-2860QM [4]"]!
+					let phoneHWDef = hwLib.hardware["Apple A Series [8]"]!
+					let localClient = ComputeNode(name: "Client01", description: "Client PC",
+												  hardwareDefinition: clientHWDef,
+												  zone: intranet, type: .Client)
+					_design!.add(computeNode: localClient)
+					let mobileClient = ComputeNode(name: "Mobile01", description: "Mobile Device",
+												   hardwareDefinition: phoneHWDef,
+												   zone: internet, type: .Client)
+					_design!.add(computeNode: mobileClient)
+
+					// Services
+					for kv in DefLibManager.serviceDefLib.services {
+						_design!.services[kv.key] = kv.value
+					}
 				}
 				return _design!
 			}

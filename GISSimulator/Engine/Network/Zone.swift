@@ -55,6 +55,21 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 			exitConnections(in: network).count > 0
 	}
 	
+	func connectionStatus(to other: Zone, in network: [Connection]) -> ZoneConnectionStatus {
+		let exits = exitConnections(in: network)
+		let entries = entryConnections(in: network)
+		if exits.contains(where: {$0.destination === other}) {
+			if entries.contains(where: {$0.source === other}) {
+				return .Both
+			}
+			return .ExitOnly
+		}
+		if entries.contains(where: {$0.source === other}) {
+			return .EnterOnly
+		}
+		return .None
+	}
+	
 	func clients(in computeNodes: [ComputeNode]) -> [ComputeNode] {
 		return computeNodes.filter({$0.type == .Client})
 			.filter({$0.zone === self})
@@ -72,4 +87,11 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 			return self === clientNodes.first?.zone
 		})
 	}
+}
+
+enum ZoneConnectionStatus: CaseIterable {
+	case None
+	case ExitOnly
+	case EnterOnly
+	case Both
 }

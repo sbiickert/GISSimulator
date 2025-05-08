@@ -73,7 +73,7 @@ struct DefLibManager {
 			guard let hwDef = hwFromDictv1(hwDict) else {
 				continue
 			}
-			hardware[hwDef.processor + "[\(hwDef.cores)"] = hwDef
+			hardware[hwDef.processor + " [\(hwDef.cores)]"] = hwDef
 		}
 		
 		return HardwareDefLib(date: date, hardware: hardware)
