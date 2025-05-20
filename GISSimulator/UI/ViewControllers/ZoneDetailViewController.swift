@@ -10,7 +10,8 @@ import UIKit
 class ZoneDetailViewController: UIViewController,
 								UITableViewDelegate,
 								UITableViewDataSource,
-								UITextFieldDelegate {
+								UITextFieldDelegate,
+								UINavigationBarDelegate {
 	
 	@IBOutlet weak var nameTextField: UITextField!
 	@IBAction func nameChanged(_ sender: Any) {
@@ -79,10 +80,10 @@ class ZoneDetailViewController: UIViewController,
 			selectedItem.state = .on
 			print(selectedItem.title)
 		}
-		if let selectedItem = bandwidthMenuButton.menu!.children.first(where: { Int($0.title) == local?.bandwidthMbps ?? 0 }) as? UIAction {
-			//selectedItem.state = .on
-			//print(selectedItem.title)
-		}
+//		if let selectedItem = bandwidthMenuButton.menu!.children.first(where: { Int($0.title) == local?.bandwidthMbps ?? 0 }) as? UIAction {
+//			selectedItem.state = .on
+//			print(selectedItem.title)
+//		}
 		tableview.reloadData()
 	}
 	
@@ -139,7 +140,7 @@ class ZoneDetailViewController: UIViewController,
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ZoneDetailCell", for: indexPath)
+		var cell = tableView.dequeueReusableCell(withIdentifier: "ConnDetailCell", for: indexPath)
 		guard let design = design else { return cell }
 
 		if indexPath.section == 0 {
@@ -163,6 +164,7 @@ class ZoneDetailViewController: UIViewController,
 		}
 		else {
 			// Compute nodes
+			cell = tableView.dequeueReusableCell(withIdentifier: "ComputeDetailCell", for: indexPath)
 			let node = computeNodes[indexPath.row]
 			var config = cell.defaultContentConfiguration()
 			config.text = node.name
@@ -177,7 +179,6 @@ class ZoneDetailViewController: UIViewController,
 			}
 			cell.contentConfiguration = config
 		}
-
 		
 		return cell
 	}
@@ -193,6 +194,9 @@ class ZoneDetailViewController: UIViewController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		// TODO: handle connection detail or compute detail save changes
+		//navigationController?.delegate = self
 
         // Set up the Zone Type popup menu.
 		let options: [UIAction] = ZoneType.allCases.map({ UIAction(title: $0.rawValue, handler: {[self] (action: UIAction) in
@@ -209,15 +213,31 @@ class ZoneDetailViewController: UIViewController,
 		updateUI()
 		
     }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.isNavigationBarHidden = true
+	}
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+		if let connDetailVC = segue.destination as? ConnectionDetailViewController,
+		let cell = sender as? UITableViewCell {
+			navigationController?.isNavigationBarHidden = false
+			connDetailVC.zone = zone
+			let indexPath = tableview.indexPath(for: cell)!
+			connDetailVC.otherZone = otherZones[indexPath.row]
+			connDetailVC.network = design?.network ?? []
+		}
+		else if let _ = segue.destination as? ComputeDetailViewController {
+			navigationController?.isNavigationBarHidden = false
+		}
     }
-    */
+	
+	
 
 }

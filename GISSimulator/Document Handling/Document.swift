@@ -32,9 +32,12 @@ class Document: UIDocument {
 					_design!.add(connection: Connection(source: dmz, destination: internet, bandwidthMbps: 500, latencyMs: 10), addReciprocalConnection: true)
 					_design!.add(connection: Connection(source: internet, destination: agol, bandwidthMbps: 1000, latencyMs: 10), addReciprocalConnection: true)
 					
-					// Physical servers
+					// Compute
 					let hwLib = DefLibManager.hardwareDefLib
 					let serverHWDef = hwLib.hardware["Xeon Gold 6154 [36]"]!
+					let clientHWDef = hwLib.hardware["Intel Core i7-2860QM [4]"]!
+					let phoneHWDef = hwLib.hardware["Apple A Series [8]"]!
+
 					var localHost = ComputeNode(name: "SRV01", description: "Local Server",
 												hardwareDefinition: serverHWDef,
 												zone: intranet, type: .PhysicalServer)
@@ -42,7 +45,6 @@ class Document: UIDocument {
 											   hardwareDefinition: serverHWDef,
 											   zone: agol, type: .PhysicalServer)
 					
-					// Virtual servers
 					localHost.addVirtualHost(name: "VWEB01", vCores: 4, memoryGB: 16)
 					localHost.addVirtualHost(name: "VGIS01", vCores: 8, memoryGB: 32)
 					localHost.addVirtualHost(name: "VDB01", vCores: 4, memoryGB: 16)
@@ -51,8 +53,6 @@ class Document: UIDocument {
 					_design!.add(computeNode: agolHost)
 
 					// Clients
-					let clientHWDef = hwLib.hardware["Intel Core i7-2860QM [4]"]!
-					let phoneHWDef = hwLib.hardware["Apple A Series [8]"]!
 					let localClient = ComputeNode(name: "Client01", description: "Client PC",
 												  hardwareDefinition: clientHWDef,
 												  zone: intranet, type: .Client)

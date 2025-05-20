@@ -129,14 +129,9 @@ class NetworkViewController: UITableViewController,
 				print("Add zone!")
 			}
 			button = UIButton(primaryAction: action)
+			return button
 		}
-		else {
-			let action = UIAction(title: "Add Connection", image: UIImage(systemName: "plus.app.fill")) { _ in
-				print("Add connection!")
-			}
-			button = UIButton(primaryAction: action)
-		}
-		return button
+		return super.tableView(tableView, viewForFooterInSection: section)
 	}
 	
 	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -185,15 +180,25 @@ class NetworkViewController: UITableViewController,
 		}
     }
  
+	// Called by a pressing delete on the zone detail
 	@IBAction func unwindToNetworkViewController(_ segue: UIStoryboardSegue) {
 		if let zoneDetailVC = segue.source as? ZoneDetailViewController {
 			handleZoneDetailDismissal(zoneDetailVC)
 		}
 	}
 	
+	// User tapped outside the presented navigation controller
 	func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-		if let zoneDetailVC = presentationController.presentedViewController as? ZoneDetailViewController {
-			handleZoneDetailDismissal(zoneDetailVC)
+		if let nav = presentationController.presentedViewController as? UINavigationController {
+			if let zoneDetailVC = nav.visibleViewController as? ZoneDetailViewController {
+				handleZoneDetailDismissal(zoneDetailVC)
+			}
+			if let connDetailVC = nav.visibleViewController as? ConnectionDetailViewController {
+				// do something
+			}
+			if let compDetailVC = nav.visibleViewController as? ComputeDetailViewController {
+				// do something
+			}
 		}
 	}
 	

@@ -7,61 +7,107 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "10FB4F9B-050F-4F1B-BC76-8C865B53AA07"
-            shouldBeEnabled = "No"
+            uuid = "849EE658-8DB1-4053-9F93-94E66223DD7D"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GISSimulator/UI/ViewControllers/ZoneDetailViewController.swift"
+            filePath = "GISSimulator/UI/ViewControllers/NetworkViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "tableView(_:numberOfRowsInSection:)"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "presentationControllerDidDismiss(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "849EE658-8DB1-4053-9F93-94E66223DD7D - f747caef055b5c49"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GISSimulator.NetworkViewController.presentationControllerDidDismiss(__C.UIPresentationController) -&gt; ()"
+                  moduleName = "GISSimulator.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/NetworkViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190">
+               </Location>
+               <Location
+                  uuid = "849EE658-8DB1-4053-9F93-94E66223DD7D - f747caef055b5c49"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GISSimulator.NetworkViewController.presentationControllerDidDismiss(__C.UIPresentationController) -&gt; ()"
+                  moduleName = "GISSimulator.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/NetworkViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D1F63293-7A80-4D4A-9B01-9DA092903B60"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GISSimulator/UI/ViewControllers/NetworkViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
+            landmarkName = "handleZoneDetailDismissal(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F19A6203-7E2D-44C4-8C96-ED4C5381DC44"
-            shouldBeEnabled = "No"
+            uuid = "1984E6C1-E512-42C8-8DC2-9392C490FA61"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GISSimulator/UI/ViewControllers/ZoneDetailViewController.swift"
+            filePath = "GISSimulator/UI/ViewControllers/NetworkViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "computeNodes"
-            landmarkType = "24">
+            startingLineNumber = "185"
+            endingLineNumber = "185"
+            landmarkName = "unwindToNetworkViewController(_:)"
+            landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F19A6203-7E2D-44C4-8C96-ED4C5381DC44 - 18f105eb716454ef"
+                  uuid = "1984E6C1-E512-42C8-8DC2-9392C490FA61 - 5cdf28c78ea1171d"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "GISSimulator.ZoneDetailViewController.computeNodes.getter : Swift.Array&lt;GISSimulator.ComputeNode&gt;"
+                  symbolName = "GISSimulator.NetworkViewController.unwindToNetworkViewController(__C.UIStoryboardSegue) -&gt; ()"
                   moduleName = "GISSimulator.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/ZoneDetailViewController.swift"
+                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/NetworkViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104">
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
                </Location>
                <Location
-                  uuid = "F19A6203-7E2D-44C4-8C96-ED4C5381DC44 - 18f105eb716454ef"
+                  uuid = "1984E6C1-E512-42C8-8DC2-9392C490FA61 - 5cdf28c78ea1171d"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "GISSimulator.ZoneDetailViewController.computeNodes.getter : Swift.Array&lt;GISSimulator.ComputeNode&gt;"
+                  symbolName = "GISSimulator.NetworkViewController.unwindToNetworkViewController(__C.UIStoryboardSegue) -&gt; ()"
                   moduleName = "GISSimulator.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/ZoneDetailViewController.swift"
+                  urlString = "file:///Users/sjb/Developer/Capacity%20Planning/GIS%20Simulator/GISSimulator/GISSimulator/UI/ViewControllers/NetworkViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104">
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
                </Location>
             </Locations>
          </BreakpointContent>
