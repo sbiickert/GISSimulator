@@ -11,7 +11,7 @@ class ZoneDetailViewController: UIViewController,
 								UITableViewDelegate,
 								UITableViewDataSource,
 								UITextFieldDelegate,
-								UINavigationBarDelegate {
+								DetailViewControllerDelegate {
 	
 	@IBOutlet weak var nameTextField: UITextField!
 	@IBAction func nameChanged(_ sender: Any) {
@@ -194,9 +194,6 @@ class ZoneDetailViewController: UIViewController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-		// TODO: handle connection detail or compute detail save changes
-		//navigationController?.delegate = self
 
         // Set up the Zone Type popup menu.
 		let options: [UIAction] = ZoneType.allCases.map({ UIAction(title: $0.rawValue, handler: {[self] (action: UIAction) in
@@ -232,12 +229,24 @@ class ZoneDetailViewController: UIViewController,
 			let indexPath = tableview.indexPath(for: cell)!
 			connDetailVC.otherZone = otherZones[indexPath.row]
 			connDetailVC.network = design?.network ?? []
+			connDetailVC.delegate = self
 		}
 		else if let _ = segue.destination as? ComputeDetailViewController {
 			navigationController?.isNavigationBarHidden = false
 		}
     }
 	
+	   // Called by a pressing delete on the zone detail
+	   @IBAction func unwindToZoneDetailViewController(_ segue: UIStoryboardSegue) {
+		   
+	   }
+
+	func detailViewControllerDidDismiss(_ detailViewController: UIViewController) {
+		if let connDetailVC = detailViewController as? ConnectionDetailViewController {
+			design?.network = connDetailVC.network
+			updateUI()
+		}
+	}
 	
 
 }

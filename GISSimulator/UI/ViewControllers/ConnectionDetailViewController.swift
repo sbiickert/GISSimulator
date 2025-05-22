@@ -9,9 +9,11 @@ import UIKit
 
 class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 
+	var delegate: DetailViewControllerDelegate?
+	
 	var zone: Zone? 				{ didSet { updateUI() }}
 	var otherZone: Zone? 			{ didSet { updateUI() }}
-	var network: [Connection] = [] 	{ didSet { updateUI() }}
+	var network: [Connection] = []
 	
 	private var exitConn: Connection? {
 		guard let zone, let otherZone else { return nil }
@@ -43,7 +45,7 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 		conn.bandwidthMbps = Int(sender.text ?? "0") ?? 1
 		network.removeAll(where: {$0 === conn})
 		network.append(conn)
-		updateUI()
+		//updateUI()
 	}
 	@IBOutlet weak var exitBandwidthMenuButton: UIButton!
 	@IBAction func exitBandwidthMenuAction(_ sender: UIAction) {
@@ -54,12 +56,12 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 		updateUI()
 	}
 	@IBOutlet weak var exitLatencyTextField: UITextField!
-	@IBAction func exitLatencyTextFieldChanged(_ sender: UITextField) {
+	@IBAction func exitLatencyChanged(_ sender: UITextField) {
 		guard var conn = exitConn else {return}
 		conn.latencyMs = Int(sender.text ?? "0") ?? 1
 		network.removeAll(where: {$0 === conn})
 		network.append(conn)
-		updateUI()
+		//updateUI()
 	}
 	
 	
@@ -81,7 +83,7 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 		conn.bandwidthMbps = Int(sender.text ?? "0") ?? 1
 		network.removeAll(where: {$0 === conn})
 		network.append(conn)
-		updateUI()
+		//updateUI()
 	}
 	@IBOutlet weak var entryBandwidthMenuButton: UIButton!
 	@IBAction func entryBandwidthMenuAction(_ sender: UIAction) {
@@ -92,12 +94,12 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 		updateUI()
 	}
 	@IBOutlet weak var entryLatencyTextField: UITextField!
-	@IBAction func entryLatencyTextFieldChanged(_ sender: UITextField) {
+	@IBAction func entryLatencyChanged(_ sender: UITextField) {
 		guard var conn = entryConn else {return}
 		conn.latencyMs = Int(sender.text ?? "0") ?? 1
 		network.removeAll(where: {$0 === conn})
 		network.append(conn)
-		updateUI()
+		//updateUI()
 	}
 	
 	private func updateUI() {
@@ -128,9 +130,17 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 		return true
 	}
 	
+	@objc func done() {
+		delegate?.detailViewControllerDidDismiss(self)
+		navigationController?.popViewController(animated: true)
+	}
+	
 	override func viewDidLoad() {
         super.viewDidLoad()
 
+		// Create the Done button
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+		
 		// Set up the bandwidth options menus.
 		let exitBandwidthOptions: [UIAction] = [10, 100, 500, 1000, 2500, 10000].map({ UIAction(title: String($0), handler: {[self] (action: UIAction) in
 			self.exitBandwidthMenuAction(action)

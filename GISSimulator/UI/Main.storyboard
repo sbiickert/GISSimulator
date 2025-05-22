@@ -347,7 +347,7 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <connections>
-                                                            <action selector="exitBandwidthChanged:" destination="8RP-PA-obo" eventType="valueChanged" id="3DY-bQ-5KC"/>
+                                                            <action selector="exitBandwidthChanged:" destination="8RP-PA-obo" eventType="editingChanged" id="jta-UV-7v8"/>
                                                             <outlet property="delegate" destination="8RP-PA-obo" id="Ar2-2Y-rqc"/>
                                                         </connections>
                                                     </textField>
@@ -371,7 +371,7 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <connections>
-                                                            <action selector="exitLatencyTextFieldChanged:" destination="8RP-PA-obo" eventType="valueChanged" id="78i-vc-9gz"/>
+                                                            <action selector="exitLatencyChanged:" destination="8RP-PA-obo" eventType="editingChanged" id="i0o-aR-z2n"/>
                                                             <outlet property="delegate" destination="8RP-PA-obo" id="odL-IH-2A9"/>
                                                         </connections>
                                                     </textField>
@@ -427,7 +427,7 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <connections>
-                                                            <action selector="entryBandwidthChanged:" destination="8RP-PA-obo" eventType="valueChanged" id="ocu-TW-pJZ"/>
+                                                            <action selector="entryBandwidthChanged:" destination="8RP-PA-obo" eventType="editingChanged" id="Q7F-kC-FGY"/>
                                                             <outlet property="delegate" destination="8RP-PA-obo" id="hje-4F-eXp"/>
                                                         </connections>
                                                     </textField>
@@ -454,7 +454,7 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                         <connections>
-                                                            <action selector="entryLatencyTextFieldChanged:" destination="8RP-PA-obo" eventType="valueChanged" id="xIX-rJ-OcU"/>
+                                                            <action selector="entryLatencyChanged:" destination="8RP-PA-obo" eventType="editingChanged" id="aF9-wH-4R4"/>
                                                             <outlet property="delegate" destination="8RP-PA-obo" id="POD-x4-cRO"/>
                                                         </connections>
                                                     </textField>

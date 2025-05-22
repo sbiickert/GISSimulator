@@ -125,8 +125,16 @@ class NetworkViewController: UITableViewController,
 	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		let button: UIButton
 		if section == 0 {
-			let action = UIAction(title: "Add Zone", image: UIImage(systemName: "plus.app")) { _ in
-				print("Add zone!")
+			let action = UIAction(title: "Add Zone", image: UIImage(systemName: "plus.app")) { [self] _ in
+				if let design = design,
+				   let document = document {
+					let zone = Zone(name: "New Zone", description: "", zoneType: .Secured)
+					document.data.design.add(zone: zone, localBandwidthMbps: 1000, localLatencyMs: 1)
+					document.undoManager?.registerUndo(withTarget: document) {
+						$0.data.design = design
+					}
+					tableView.reloadData()
+				}
 			}
 			button = UIButton(primaryAction: action)
 			return button
@@ -168,17 +176,25 @@ class NetworkViewController: UITableViewController,
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// Get the new view controller using segue.destination.
+		if let _ = segue.destination.children.first as? ZoneDetailViewController,
+		    let design = design,
+			let cell = sender as? UITableViewCell
+		{
+			_prepare(for: segue, zone: design.zones[tableView.indexPath(for: cell)!.row])
+		}
+    }
+	
+	private func _prepare(for segue: UIStoryboardSegue, zone: Zone) {
+		// Get the new view controller using segue.destination.
 		if let zoneDetailVC = segue.destination.children.first as? ZoneDetailViewController,
-			let cell = sender as? UITableViewCell,
 			let design = design
 		{
 			// Pass the selected object to the new view controller.
-			let zone = design.zones[tableView.indexPath(for: cell)!.row]
 			zoneDetailVC.design = design
 			zoneDetailVC.zone = zone
 			segue.destination.presentationController?.delegate = self
 		}
-    }
+	}
  
 	// Called by a pressing delete on the zone detail
 	@IBAction func unwindToNetworkViewController(_ segue: UIStoryboardSegue) {
@@ -213,9 +229,11 @@ class NetworkViewController: UITableViewController,
 			}
 		}
 		if let design = design,
-		   let local = zoneDetailVC.localConnection,
+		   let zoneDetailVCDesign = zoneDetailVC.design,
+		   //let local = zoneDetailVC.localConnection,
 		   let document = document {
-			document.data.design.replace(connection: local)
+//			document.data.design.replace(connection: local)
+			document.data.design.network = zoneDetailVCDesign.network
 			document.data.design.replace(zone: zone)
 			document.undoManager?.registerUndo(withTarget: document) {
 				$0.data.design = design
