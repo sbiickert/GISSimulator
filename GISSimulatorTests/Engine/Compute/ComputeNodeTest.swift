@@ -23,36 +23,52 @@ struct ComputeNodeTest {
 		#expect(host.virtualHosts[0].vCoreCount! == 4)
     }
 
+	static private var _sampleClient: ComputeNode? = nil
 	static var sampleClient: ComputeNode {
-		return ComputeNode(name: "Client 001",
-						   description: "Sample PC",
-						   hardwareDefinition: HardwareDefTest.sampleClientHWDef,
-						   zone: ZoneTest.sampleIntranetZone,
-						   type: .Client)
+		if _sampleClient == nil {
+			_sampleClient = ComputeNode(name: "Client 001",
+										description: "Sample PC",
+										hardwareDefinition: HardwareDefTest.sampleClientHWDef,
+										zone: ZoneTest.sampleIntranetZone,
+										type: .Client)
+		}
+		return _sampleClient!
 	}
 
+	static private var _sampleMobile: ComputeNode? = nil
 	static var sampleMobile: ComputeNode {
-		return ComputeNode(name: "Mobile 001",
-						   description: "Sample Phone",
-						   hardwareDefinition: HardwareDefTest.sampleMobileHWDef,
-						   zone: ZoneTest.sampleInternetZone,
-						   type: .Client)
+		if _sampleMobile == nil {
+			_sampleMobile = ComputeNode(name: "Mobile 001",
+										description: "Sample Phone",
+										hardwareDefinition: HardwareDefTest.sampleMobileHWDef,
+										zone: ZoneTest.sampleInternetZone,
+										type: .Client)
+		}
+		return _sampleMobile!
 	}
 
+	static private var _sampleVHost: ComputeNode? = nil
 	static var sampleVHost: ComputeNode {
-		return ComputeNode(name: "VHost 001",
-						   description: "Sample VHost",
-						   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
-						   zone: ZoneTest.sampleIntranetZone,
-						   type: .VirtualServer(vCores: 4, memoryGB: 16))
+		if _sampleVHost == nil {
+			_sampleVHost = ComputeNode(name: "VHost 001",
+									   description: "Sample VHost",
+									   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+									   zone: ZoneTest.sampleIntranetZone,
+									   type: .VirtualServer(vCores: 4, memoryGB: 16))
+		}
+		return _sampleVHost!
 	}
 	
+	static private var _sampleHost: ComputeNode? = nil
 	static var sampleHost: ComputeNode {
-		return ComputeNode(name: "Host 001",
-						   description: "Sample Physical Host",
-						   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
-						   zone: ZoneTest.sampleIntranetZone,
-						   type: .PhysicalServer,
-						   virtualHosts: [sampleVHost])
+		if _sampleHost == nil {
+			_sampleHost = ComputeNode(name: "Host 001",
+									  description: "Sample Physical Host",
+									  hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+									  zone: ZoneTest.sampleIntranetZone,
+									  type: .PhysicalServer,
+									  virtualHosts: [sampleVHost])
+		}
+		return _sampleHost!
 	}
 }
