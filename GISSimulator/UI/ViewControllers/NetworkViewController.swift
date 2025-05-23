@@ -9,7 +9,8 @@ import UIKit
 
 
 class NetworkViewController: UITableViewController,
-							 UIAdaptivePresentationControllerDelegate {
+							 UIAdaptivePresentationControllerDelegate,
+							 DetailViewControllerDelegate {
 
 	private var document: Document? {
 		VCUtil.getDocument(self)
@@ -190,32 +191,40 @@ class NetworkViewController: UITableViewController,
 			let design = design
 		{
 			// Pass the selected object to the new view controller.
+			zoneDetailVC.delegate = self
 			zoneDetailVC.design = design
 			zoneDetailVC.zone = zone
 			segue.destination.presentationController?.delegate = self
 		}
 	}
  
-	// Called by a pressing delete on the zone detail
+	// Called by pressing delete on the zone detail
 	@IBAction func unwindToNetworkViewController(_ segue: UIStoryboardSegue) {
 		if let zoneDetailVC = segue.source as? ZoneDetailViewController {
 			handleZoneDetailDismissal(zoneDetailVC)
 		}
 	}
 	
+	// Called by pressing Done on the zone detail
+	func detailViewControllerDidDismiss(_ detailViewController: UIViewController) {
+		if let zoneDetailVC = detailViewController as? ZoneDetailViewController {
+			handleZoneDetailDismissal(zoneDetailVC)
+		}
+	}
 	// User tapped outside the presented navigation controller
 	func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-		if let nav = presentationController.presentedViewController as? UINavigationController {
-			if let zoneDetailVC = nav.visibleViewController as? ZoneDetailViewController {
-				handleZoneDetailDismissal(zoneDetailVC)
-			}
-			if let connDetailVC = nav.visibleViewController as? ConnectionDetailViewController {
-				// do something
-			}
-			if let compDetailVC = nav.visibleViewController as? ComputeDetailViewController {
-				// do something
-			}
-		}
+		// Commented out b/c treating tapping outside as a cancel. Need to tap Done to save.
+//		if let nav = presentationController.presentedViewController as? UINavigationController {
+//			if let zoneDetailVC = nav.visibleViewController as? ZoneDetailViewController {
+//				handleZoneDetailDismissal(zoneDetailVC)
+//			}
+//			if let connDetailVC = nav.visibleViewController as? ConnectionDetailViewController {
+//				// do something
+//			}
+//			if let compDetailVC = nav.visibleViewController as? ComputeDetailViewController {
+//				// do something
+//			}
+//		}
 	}
 	
 	private func handleZoneDetailDismissal(_ zoneDetailVC: ZoneDetailViewController) {
@@ -230,10 +239,10 @@ class NetworkViewController: UITableViewController,
 		}
 		if let design = design,
 		   let zoneDetailVCDesign = zoneDetailVC.design,
-		   //let local = zoneDetailVC.localConnection,
+		   let local = zoneDetailVC.localConnection,
 		   let document = document {
-//			document.data.design.replace(connection: local)
 			document.data.design.network = zoneDetailVCDesign.network
+			document.data.design.replace(connection: local)
 			document.data.design.replace(zone: zone)
 			document.undoManager?.registerUndo(withTarget: document) {
 				$0.data.design = design

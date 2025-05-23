@@ -140,6 +140,7 @@ class ConnectionDetailViewController: UIViewController, UITextFieldDelegate {
 
 		// Create the Done button
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+		navigationController?.navigationBar.isHidden = false
 		
 		// Set up the bandwidth options menus.
 		let exitBandwidthOptions: [UIAction] = [10, 100, 500, 1000, 2500, 10000].map({ UIAction(title: String($0), handler: {[self] (action: UIAction) in

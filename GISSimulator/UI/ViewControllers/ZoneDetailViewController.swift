@@ -59,6 +59,8 @@ class ZoneDetailViewController: UIViewController,
 		present(alertController, animated: true)
 	}
 	
+	var delegate: DetailViewControllerDelegate?
+
 	var design: Design? = nil
 	
 	var zone: Zone = Zone(name: "New Zone", description: "", zoneType: .Internet) {
@@ -152,6 +154,8 @@ class ZoneDetailViewController: UIViewController,
 			switch zone.connectionStatus(to: otherZone, in: design.network) {
 			case .None:
 				config.image = UIImage(systemName: "circle.slash")
+			case .Indirect:
+				config.image = UIImage(systemName: "arrow.trianglehead.swap")
 			case .ExitOnly:
 				config.image = UIImage(systemName: "arrow.up")
 			case .EnterOnly:
@@ -192,8 +196,17 @@ class ZoneDetailViewController: UIViewController,
 		return true
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	@objc func done() {
+		delegate?.detailViewControllerDidDismiss(self)
+		self.dismiss(animated: true)
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		// Create the Done button
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+		navigationController?.navigationBar.isHidden = false
 
         // Set up the Zone Type popup menu.
 		let options: [UIAction] = ZoneType.allCases.map({ UIAction(title: $0.rawValue, handler: {[self] (action: UIAction) in
@@ -208,12 +221,11 @@ class ZoneDetailViewController: UIViewController,
 		bandwidthMenuButton.menu = UIMenu(children: bandwidthOptions)
 		
 		updateUI()
-		
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		navigationController?.isNavigationBarHidden = true
+		navigationController?.isNavigationBarHidden = false
 	}
 
     // MARK: - Navigation

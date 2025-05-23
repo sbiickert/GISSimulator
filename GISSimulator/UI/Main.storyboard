@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Zone Detail View Controller-->
+        <!--Zone Detail-->
         <scene sceneID="aba-4U-0mY">
             <objects>
                 <viewController id="06u-HM-pH6" customClass="ZoneDetailViewController" customModule="GISSimulator" customModuleProvider="target" sceneMemberID="viewController">
@@ -239,7 +239,7 @@
                             <constraint firstItem="eVO-YU-BDL" firstAttribute="top" secondItem="5ia-ju-z7C" secondAttribute="top" constant="20" id="zgp-VX-AQD"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="mak-Ar-NGo"/>
+                    <navigationItem key="navigationItem" title="Zone Detail" id="mak-Ar-NGo"/>
                     <connections>
                         <outlet property="bandwidthMenuButton" destination="tgo-i4-Ch1" id="PP7-Vu-1SL"/>
                         <outlet property="bandwidthTextField" destination="URP-W7-jZx" id="qjH-BO-tb9"/>
@@ -257,7 +257,7 @@
             </objects>
             <point key="canvasLocation" x="3205.6097560975609" y="-2997.4576271186443"/>
         </scene>
-        <!--Compute Detail View Controller-->
+        <!--Compute Detail-->
         <scene sceneID="kPq-45-ftt">
             <objects>
                 <viewController id="dVR-35-fiv" customClass="ComputeDetailViewController" customModule="GISSimulator" customModuleProvider="target" sceneMemberID="viewController">
@@ -276,13 +276,13 @@
                         <viewLayoutGuide key="safeArea" id="YlU-UL-FAY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="K6R-5e-Ivl"/>
+                    <navigationItem key="navigationItem" title="Compute Detail" id="K6R-5e-Ivl"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HoW-X1-oYU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3890" y="-2997"/>
         </scene>
-        <!--Connection Detail View Controller-->
+        <!--Zone Connections-->
         <scene sceneID="7uH-tI-knE">
             <objects>
                 <viewController id="8RP-PA-obo" customClass="ConnectionDetailViewController" customModule="GISSimulator" customModuleProvider="target" sceneMemberID="viewController">
@@ -481,7 +481,7 @@
                             <constraint firstItem="mDH-dy-MUK" firstAttribute="top" secondItem="qmk-WX-f03" secondAttribute="top" constant="20" id="lMg-C8-SdV"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="fqI-2O-J7b"/>
+                    <navigationItem key="navigationItem" title="Zone Connections" id="fqI-2O-J7b"/>
                     <connections>
                         <outlet property="entryBandwidthMenuButton" destination="fAy-SK-sgt" id="6kb-wG-aIU"/>
                         <outlet property="entryBandwidthTextField" destination="s6O-Xj-wHc" id="3Pd-ud-GXP"/>
