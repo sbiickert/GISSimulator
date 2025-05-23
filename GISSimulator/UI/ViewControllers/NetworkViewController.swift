@@ -231,13 +231,14 @@ class NetworkViewController: UITableViewController,
 		let zone = zoneDetailVC.zone
 		if zoneDetailVC.deletedZone,
 			let design = design,
-			let document = document {
+			let document = document
+		{
 			document.data.design.remove(zone: zone)
 			document.undoManager?.registerUndo(withTarget: document) {
 				$0.data.design = design
 			}
 		}
-		if let design = design,
+		else if let design = design,
 		   let zoneDetailVCDesign = zoneDetailVC.design,
 		   let local = zoneDetailVC.localConnection,
 		   let document = document {

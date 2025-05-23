@@ -88,6 +88,17 @@ struct DesignTest {
 		#expect(updatedNodes.count == 5) // One physical server, 3 VMs, 1 client
 	}
 	
+	@Test func deleteZone() async throws {
+		var d = DesignTest.sampleDesign
+		#expect(d.zones.count == 4)
+		#expect(d.network.count == 10)
+		d.remove(zone: d.getZone(named: "AGOL")!)
+		#expect(d.zones.count == 3)
+		#expect(d.network.count == 7)
+		#expect(!d.isValid)
+		printDesignValidationMessages(d)
+	}
+	
 	private func printDesignValidationMessages(_ d: Design) {
 		print("Validation errors:")
 		d.validate().forEach { print($0) }
