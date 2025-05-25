@@ -10,7 +10,7 @@ import Foundation
 public enum ComputeNodeType: Equatable, Codable {
 	case Client
 	case PhysicalServer
-	case VirtualServer(vCores: Int, memoryGB: Int)
+	case VirtualServer(vCores: Int)
 }
 
 public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {
@@ -18,6 +18,7 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 	public var name: String
 	public var description: String
 	public var hardwareDefinition: HardwareDef
+	public var memoryGB: Int
 	public var zone: Zone {
 		didSet {
 			if type == .PhysicalServer {
@@ -40,7 +41,7 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 	
 	public var vCoreCount: Int? {
 		switch type {
-		case .VirtualServer(vCores: let vCores, memoryGB: _):
+		case .VirtualServer(vCores: let vCores):
 			return vCores
 		default:
 			return nil
@@ -67,7 +68,7 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 			c = 1000 // Arbitrary large number. Clients represent a group, not a PC.
 		case .PhysicalServer:
 			c = hardwareDefinition.cores
-		case .VirtualServer(let vCores, _):
+		case .VirtualServer(let vCores):
 			c = vCores
 		}
 		return MultiQueue(serviceTimeCalculator: self,
@@ -83,8 +84,9 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 		let vHost = ComputeNode(name: vHostName,
 								description: "",
 								hardwareDefinition: hardwareDefinition,
+								memoryGB: memoryGB,
 								zone: zone,
-								type: .VirtualServer(vCores: vCores, memoryGB: memoryGB))
+								type: .VirtualServer(vCores: vCores))
 		add(vHost: vHost)
 	}
 	
@@ -107,5 +109,9 @@ public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equa
 	}
 	public var totalPhysicalCPUAllocation: Int {
 		Int(Double(totalVirtualCPUAllocation) * hardwareDefinition.threading.factor)
+	}
+	public var totalMemoryAllocation: Int {
+		virtualHosts
+			.reduce(0, {$0 + $1.memoryGB})
 	}
 }

@@ -40,9 +40,11 @@ class Document: UIDocument {
 
 					var localHost = ComputeNode(name: "SRV01", description: "Local Server",
 												hardwareDefinition: serverHWDef,
+												memoryGB: 16,
 												zone: intranet, type: .PhysicalServer)
 					let agolHost = ComputeNode(name: "AGOL01", description: "AWS Server",
 											   hardwareDefinition: serverHWDef,
+											   memoryGB: 16,
 											   zone: agol, type: .PhysicalServer)
 					
 					localHost.addVirtualHost(name: "VWEB01", vCores: 4, memoryGB: 16)
@@ -55,10 +57,12 @@ class Document: UIDocument {
 					// Clients
 					let localClient = ComputeNode(name: "Client01", description: "Client PC",
 												  hardwareDefinition: clientHWDef,
+												  memoryGB: 16,
 												  zone: intranet, type: .Client)
 					_design!.add(computeNode: localClient)
 					let mobileClient = ComputeNode(name: "Mobile01", description: "Mobile Device",
 												   hardwareDefinition: phoneHWDef,
+												   memoryGB: 16,
 												   zone: internet, type: .Client)
 					_design!.add(computeNode: mobileClient)
 

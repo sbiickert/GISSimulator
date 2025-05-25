@@ -29,7 +29,7 @@ public struct Design: Described, Validatable, Codable {
 					return [node]
 				case .PhysicalServer:
 					return [node] + node.virtualHosts
-				case .VirtualServer(_, _):
+				case .VirtualServer(_):
 					fatalError("Virtual servers should not be in the Design's _computeNodes. They are in Physical Servers.")
 				}
 			})

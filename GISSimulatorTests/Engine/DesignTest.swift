@@ -23,7 +23,7 @@ struct DesignTest {
 		#expect(localHost!.totalPhysicalCPUAllocation == 8)
 		let gisHost = d.getComputeNode(named: "VGIS01")
 		#expect(gisHost != nil)
-		#expect(gisHost?.type == .VirtualServer(vCores: 8, memoryGB: 32))
+		#expect(gisHost?.type == .VirtualServer(vCores: 8))
 		
 		#expect(d.serviceProviders.count == 16)
 		#expect(d.workflows.count == 2)
@@ -132,9 +132,11 @@ struct DesignTest {
 		// Physical servers
 		let localHost = ComputeNode(name: "SRV01", description: "Local Server",
 									hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+									memoryGB: 48,
 									zone: d.getZone(named: "Intranet")!, type: .PhysicalServer)
 		let agolHost = ComputeNode(name: "AGOL01", description: "AWS Server",
 								   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+								   memoryGB: 64,
 								   zone: d.getZone(named: "AGOL")!, type: .PhysicalServer)
 		d.add(computeNode: localHost)
 		d.add(computeNode: agolHost)

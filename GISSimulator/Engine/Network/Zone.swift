@@ -73,14 +73,18 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 		return .None
 	}
 	
+	func allComputeNodes(in computeNodes: [ComputeNode]) -> [ComputeNode] {
+		return computeNodes.filter({$0.zone === self})
+	}
+	
 	func clients(in computeNodes: [ComputeNode]) -> [ComputeNode] {
 		return computeNodes.filter({$0.type == .Client})
 			.filter({$0.zone === self})
 	}
 	
 	func servers(in computeNodes: [ComputeNode]) -> [ComputeNode] {
-		let hosts = computeNodes.filter({$0.type != .Client})
-		return hosts.filter({$0.zone === self})
+		return computeNodes.filter({$0.type != .Client})
+			.filter({$0.zone === self})
 	}
 	
 	func workflows(in wfList: [Workflow]) -> [Workflow] {

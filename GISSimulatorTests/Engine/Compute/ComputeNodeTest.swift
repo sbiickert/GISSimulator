@@ -29,6 +29,7 @@ struct ComputeNodeTest {
 			_sampleClient = ComputeNode(name: "Client 001",
 										description: "Sample PC",
 										hardwareDefinition: HardwareDefTest.sampleClientHWDef,
+										memoryGB: 16,
 										zone: ZoneTest.sampleIntranetZone,
 										type: .Client)
 		}
@@ -41,6 +42,7 @@ struct ComputeNodeTest {
 			_sampleMobile = ComputeNode(name: "Mobile 001",
 										description: "Sample Phone",
 										hardwareDefinition: HardwareDefTest.sampleMobileHWDef,
+										memoryGB: 8,
 										zone: ZoneTest.sampleInternetZone,
 										type: .Client)
 		}
@@ -53,8 +55,9 @@ struct ComputeNodeTest {
 			_sampleVHost = ComputeNode(name: "VHost 001",
 									   description: "Sample VHost",
 									   hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+									   memoryGB: 16,
 									   zone: ZoneTest.sampleIntranetZone,
-									   type: .VirtualServer(vCores: 4, memoryGB: 16))
+									   type: .VirtualServer(vCores: 4))
 		}
 		return _sampleVHost!
 	}
@@ -65,6 +68,7 @@ struct ComputeNodeTest {
 			_sampleHost = ComputeNode(name: "Host 001",
 									  description: "Sample Physical Host",
 									  hardwareDefinition: HardwareDefTest.sampleServerHWDef,
+									  memoryGB: 64,
 									  zone: ZoneTest.sampleIntranetZone,
 									  type: .PhysicalServer,
 									  virtualHosts: [sampleVHost])

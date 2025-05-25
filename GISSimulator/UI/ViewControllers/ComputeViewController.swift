@@ -8,6 +8,26 @@
 import UIKit
 
 class ComputeViewController: UITableViewController {
+	private var document: Document? {
+		VCUtil.getDocument(self)
+	}
+	
+	private var design: Design? {
+		VCUtil.getDesign(self)
+	}
+	
+	static func image(for node: ComputeNode) -> UIImage? {
+		switch node.type {
+		case .Client where node.hardwareDefinition.architecture != .Intel:
+			return  UIImage(named: "Device")
+		case .Client:
+			return  UIImage(named: "Desktop")
+		case .PhysicalServer:
+			return  UIImage(named: "ServerHW")
+		default:
+			return UIImage(named: "ServerV")
+		}
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,59 +42,53 @@ class ComputeViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+		return design?.zones.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+		guard let zone = design?.zones[section] else {return 1}
+		return max(zone.allComputeNodes(in: design!.computeNodes).count, 1)
     }
+	
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		guard let zone = design?.zones[section] else {return nil}
+		return "Zone \(zone.name): \(zone.description)"
+	}
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+		var cell = tableView.dequeueReusableCell(withIdentifier: "NoComputeTableCell", for: indexPath)
+		if let zone = design?.zones[indexPath.section]
+		{
+			let nodes = zone.allComputeNodes(in: design!.computeNodes)
+			if indexPath.row >= nodes.count {
+				var config = cell.defaultContentConfiguration()
+				config.text = "No compute nodes"
+				config.image = UIImage(systemName: "circle.slash")
+				cell.contentConfiguration = config
+			}
+			else {
+				cell = tableView.dequeueReusableCell(withIdentifier: "ComputeTableCell", for: indexPath)
+				let nodeCell = cell as! ComputeTableViewCell
+				let node = nodes[indexPath.row]
+				nodeCell.iconImage.image = ComputeViewController.image(for: node)
+				nodeCell.nameLabel.text = "\(node.name) - \(node.description)"
+				nodeCell.specLabel.text = node.hardwareDefinition.processor
+				var sizeText = ""
+				if node.type == .Client || node.type == .PhysicalServer {
+					sizeText += "\(node.hardwareDefinition.cores) cores, "
+				}
+				else {
+					sizeText += "\(node.vCoreCount ?? 0) v. cores, "
+				}
+				sizeText += "\(node.memoryGB) GB"
+				nodeCell.sizeLabel.text = sizeText
+			}
+		}
 
-        // Configure the cell...
-
+		cell.layoutIfNeeded()
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     /*
     // MARK: - Navigation

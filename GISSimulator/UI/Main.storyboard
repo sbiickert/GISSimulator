@@ -551,11 +551,11 @@
                                     <segue destination="M3J-ac-7LI" kind="presentation" trigger="accessoryAction" id="ELX-fl-YwU"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="ConnectionTableCell" rowHeight="85" id="3Cd-77-irD" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConnectionTableCell" rowHeight="85" id="3Cd-77-irD" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
                                 <rect key="frame" x="20" y="140.5" width="780" height="85"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Cd-77-irD" translatesAutoresizingMaskIntoConstraints="NO" id="dcu-xL-lec" customClass="ConnectionTableViewCell" customModule="GISSimulator" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="740" height="85"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="780" height="85"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="GISGlobe" translatesAutoresizingMaskIntoConstraints="NO" id="5NM-Sa-Afq">
@@ -577,7 +577,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Latency: 10 ms" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hD2-Ze-aWo">
-                                            <rect key="frame" x="464" y="47" width="256" height="21"/>
+                                            <rect key="frame" x="465" y="47" width="256" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -602,26 +602,76 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jw6-rF-Wh8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2097.8048780487807" y="-2361.3559322033898"/>
+            <point key="canvasLocation" x="2097" y="-2350"/>
         </scene>
         <!--Compute-->
         <scene sceneID="g3x-Bn-DDc">
             <objects>
                 <tableViewController id="q0V-np-KqH" customClass="ComputeViewController" customModule="GISSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="Y4D-Vr-lWD">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="85" estimatedRowHeight="85" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="Y4D-Vr-lWD">
                         <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="k7F-G4-GFa">
-                                <rect key="frame" x="0.0" y="50" width="820" height="43.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="ComputeTableCell" id="k7F-G4-GFa" customClass="ComputeTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                <rect key="frame" x="20" y="55.5" width="780" height="85"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="k7F-G4-GFa" id="dnA-6I-dzl">
-                                    <rect key="frame" x="0.0" y="0.0" width="820" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="740" height="85"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Compute Node Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qyr-1g-SCe">
+                                            <rect key="frame" x="88" y="11" width="632" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ServerHW" translatesAutoresizingMaskIntoConstraints="NO" id="apD-oh-FUB">
+                                            <rect key="frame" x="16" y="9" width="64" height="64"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hardware Spec" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tkr-jj-us2">
+                                            <rect key="frame" x="88" y="42" width="289" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4 cores, 16 GB RAM" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lFH-eV-Pkd">
+                                            <rect key="frame" x="374" y="41" width="306" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="iconImage" destination="apD-oh-FUB" id="4JV-wS-iJE"/>
+                                    <outlet property="nameLabel" destination="qyr-1g-SCe" id="Lh8-Da-2at"/>
+                                    <outlet property="sizeLabel" destination="lFH-eV-Pkd" id="AHM-bA-eBV"/>
+                                    <outlet property="specLabel" destination="Tkr-jj-us2" id="3MZ-0a-X1D"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoComputeTableCell" textLabel="jrm-I3-h1x" style="IBUITableViewCellStyleDefault" id="8vJ-ey-v7w" customClass="ComputeTableViewCell" customModule="GISSimulator" customModuleProvider="target">
+                                <rect key="frame" x="20" y="140.5" width="780" height="85"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8vJ-ey-v7w" id="MAB-QB-2FJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="780" height="85"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jrm-I3-h1x">
+                                            <rect key="frame" x="16" y="0.0" width="748" height="85"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
+                        <sections/>
                         <connections>
                             <outlet property="dataSource" destination="q0V-np-KqH" id="2Vu-h0-DrI"/>
                             <outlet property="delegate" destination="q0V-np-KqH" id="Cgn-oF-IDd"/>
@@ -631,7 +681,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="80e-By-IyG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2723" y="-2351"/>
+            <point key="canvasLocation" x="2742" y="-2350"/>
         </scene>
         <!--Service Providers-->
         <scene sceneID="oAh-vA-uFz">
@@ -660,7 +710,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="srG-gg-0Y6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3335" y="-2361"/>
+            <point key="canvasLocation" x="3391" y="-2350"/>
         </scene>
         <!--Workflows-->
         <scene sceneID="38P-Jf-vCH">
@@ -689,7 +739,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M3f-Gk-6lH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3954" y="-2350"/>
+            <point key="canvasLocation" x="4080" y="-2350"/>
         </scene>
         <!--Validation-->
         <scene sceneID="2wS-4Q-yA8">
@@ -718,7 +768,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OTN-hA-UCx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4610" y="-2351"/>
+            <point key="canvasLocation" x="4769" y="-2350"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="mlG-ab-tZX">
@@ -756,7 +806,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XVv-D0-KfN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2589" y="-1516"/>
+            <point key="canvasLocation" x="5558" y="-2350"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="1dV-NM-ZsR">
@@ -780,6 +830,7 @@
     <resources>
         <image name="AGOL" width="99.5" height="100"/>
         <image name="GISGlobe" width="111" height="111.5"/>
+        <image name="ServerHW" width="97" height="61.5"/>
         <image name="trash" catalog="system" width="117" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
