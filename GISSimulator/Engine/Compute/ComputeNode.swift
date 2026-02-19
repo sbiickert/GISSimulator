@@ -7,10 +7,25 @@
 
 import Foundation
 
-public enum ComputeNodeType: Equatable, Codable {
+public enum ComputeNodeType: Equatable, Codable, CaseIterable {
+	public static var allCases: [ComputeNodeType] {
+		return [.Client, .PhysicalServer, .VirtualServer(vCores: 1)]
+	}
+	
 	case Client
 	case PhysicalServer
 	case VirtualServer(vCores: Int)
+	
+	public var stringValue: String {
+		switch self {
+		case .Client:
+			return "Client"
+		case .PhysicalServer:
+			return "Physical Server"
+		case .VirtualServer(vCores: _):
+			return "Virtual Machine"
+		}
+	}
 }
 
 public struct ComputeNode: Described, ServiceTimeCalculator, QueueProvider, Equatable, Codable {

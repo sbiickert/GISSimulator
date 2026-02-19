@@ -80,7 +80,6 @@ class ZoneDetailViewController: UIViewController,
 		latencyTextField.text = String(local?.latencyMs ?? 0)
 		if let selectedItem = typeMenuButton.menu!.children.first(where: { $0.title == zone.zoneType.rawValue }) as? UIAction {
 			selectedItem.state = .on
-			print(selectedItem.title)
 		}
 //		if let selectedItem = bandwidthMenuButton.menu!.children.first(where: { Int($0.title) == local?.bandwidthMbps ?? 0 }) as? UIAction {
 //			selectedItem.state = .on

@@ -67,7 +67,7 @@ public struct Zone: Described, Equatable, Hashable, Codable {
 		if entries.contains(where: {$0.source === other}) {
 			return .EnterOnly
 		}
-		if let route = Route.findRoute(from: self, to: other, in: network) {
+		if let _ = Route.findRoute(from: self, to: other, in: network) {
 			return .Indirect
 		}
 		return .None

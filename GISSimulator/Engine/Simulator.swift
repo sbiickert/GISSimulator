@@ -63,7 +63,6 @@ public class Simulator: Described {
 	}
 	
 	private var nextQEventTime: Int? {
-		let tempTimes = queues.map(\.nextEventTime)
 		return queues.compactMap(\.nextEventTime)
 			.min()
 	}
@@ -111,7 +110,7 @@ public class Simulator: Described {
 		if wfTime < qTime {
 			let workflow = nextWorkflow!
 			nextEventTimeForWorkflows[workflow.name] = workflow.calculateNextEventTime(clock: now)
-			let (group, r) = workflow.createClientRequests(network: design.network, clock: now)
+			let (_, r) = workflow.createClientRequests(network: design.network, clock: now)
 			requests = r
 		} else {
 			let queue = nextQueue

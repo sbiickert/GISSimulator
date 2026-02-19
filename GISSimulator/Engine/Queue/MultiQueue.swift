@@ -74,7 +74,7 @@ public class MultiQueue {
 	}
 	
 	public func enqueue(request: ClientRequest, clock: Int) {
-		guard let step = request.solution.currentStep else { return }
+		guard let _ = request.solution.currentStep else { return }
 		
 		let st = serviceTimeCalculator.calculateServiceTime(for: request)
 		let lat = serviceTimeCalculator.calculateLatency(for: request)

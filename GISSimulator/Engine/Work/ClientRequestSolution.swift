@@ -29,7 +29,7 @@ public struct ClientRequestSolution {
 		// service provider, traversing the network between each
 		var step = chain.steps.first!
 		var sourceSP = chain.serviceProvider(for: step)!
-		var handlerNode = sourceSP.handlerNode
+		let handlerNode = sourceSP.handlerNode
 		guard handlerNode != nil else { fatalError("No handler node for \(sourceSP)")}
 		var sourceNode = handlerNode!
 		
